@@ -1,2 +1,2 @@
 # JavaScriptStudyProject
- NestJs+React+Redux+Saga
+NestJs+React+Redux+Saga+TypeORM+MongoDB
