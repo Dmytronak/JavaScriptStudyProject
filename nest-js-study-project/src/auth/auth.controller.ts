@@ -39,7 +39,9 @@ export class AuthController {
 
     @Post('/login')
     async login(@Body() loginAuthView: LoginAuthView): Promise<ResponseLoginAuthView> {
-        return await this.authService.login(loginAuthView);
+        const response = await this.authService.login(loginAuthView);
+        console.log(response);
+        return response;
     }
     
     @ApiParam({

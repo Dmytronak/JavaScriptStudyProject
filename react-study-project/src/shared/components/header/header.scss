@@ -1,80 +1,116 @@
-header {
+nav {
     position: flex;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    top: 0;
-    width: 100%;
-    height: 77px;
-    padding-bottom: 10px;
-    background-color: #49c3f6;
-    z-index: 9999;
-
-    .user {
-        display: flex;
-        flex-direction: row;
-        margin: 70px 0 0 52%;
-
-        h3 {
-            cursor: pointer;
-            color: #fff;
-        }
-
-        .logout {
-            margin: 9px 0 0 15px;
-            cursor: pointer;
-            color: #fff;
-        }
-
-        .logout:hover,
-        h3:hover {
-            text-decoration: underline;
-        }
-    }
-
-    .logo {
-        display: inline-flex;
-        h1 {
-            position: absolute;
-            margin: 10px 0 0 5%;
-            a {
-                color: #444;
-                text-decoration: none;
-            }
-        }
+        flex-wrap: wrap;
+        top: 0;
+        width: 100%;
+        height: 77px;
+        padding-bottom: 10px;
+        z-index: 9999;
         @media (prefers-reduced-motion: no-preference) {
             .nav-logo { 
-              width: 16%;
-              animation: nav-logo-spin infinite 7s linear;
+                width: 5%;
+                animation: nav-logo-spin infinite 7s linear;
             }
-          }
-    
-          @keyframes nav-logo-spin {
-            from {
-              transform: rotate(0deg);
-            }
-            to {
-              transform: rotate(360deg);
-            }
-          }
-    }
-
-    @media (min-width: 576px) {
-        .user {
-            margin-left: 75%;
+        }
+        @keyframes nav-logo-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
         }
     }
-    
-    @media (min-width: 768px) {
-        .user {
-            margin-left: 80%;
+    h1{
+        a {
+            color: rgb(68, 68, 68);
         }
-    }
-    
-    @media (min-width: 1200px) {
-        .user {
-            margin-left: 87%;
+        a:hover {
+            color: rgb(68, 68, 68);
+            text-decoration:none;
         }
-    }
-
+      
+    }  
+        
 }
+
+
+// header {
+//     position: flex;
+//     display: flex;
+//     flex-direction: row;
+//     flex-wrap: wrap;
+//     top: 0;
+//     width: 100%;
+//     height: 77px;
+//     padding-bottom: 10px;
+//     background-color: #6c7c96;
+//     z-index: 9999;
+
+//     .user {
+//         display: flex;
+//         flex-direction: row;
+//         margin: 70px 0 0 52%;
+
+//         h3 {
+//             cursor: pointer;
+//             color: #fff;
+//         }
+
+//         .logout {
+//             margin: 9px 0 0 15px;
+//             cursor: pointer;
+//             color: #fff;
+//         }
+
+//         .logout:hover,
+//         h3:hover {
+//             text-decoration: underline;
+//         }
+//     }
+
+//     .logo {
+//         display: inline-flex;
+//         h1 {
+//             position: absolute;
+//             margin: 10px 0 0 5%;
+//             a {
+//                 color: #444;
+//                 text-decoration: none;
+//             }
+//         }
+//         @media (prefers-reduced-motion: no-preference) {
+//             .nav-logo { 
+//               width: 16%;
+//               animation: nav-logo-spin infinite 7s linear;
+//             }
+//           }
+    
+//           @keyframes nav-logo-spin {
+//             from {
+//               transform: rotate(0deg);
+//             }
+//             to {
+//               transform: rotate(360deg);
+//             }
+//           }
+//     }
+
+//     @media (min-width: 576px) {
+//         .user {
+//             margin-left: 75%;
+//         }
+//     }
+    
+//     @media (min-width: 768px) {
+//         .user {
+//             margin-left: 80%;
+//         }
+//     }
+    
+//     @media (min-width: 1200px) {
+//         .user {
+//             margin-left: 87%;
+//         }
+//     }
+
+// }

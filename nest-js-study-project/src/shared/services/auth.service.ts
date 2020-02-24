@@ -81,6 +81,9 @@ export class AuthService {
     public async login(login: LoginAuthView): Promise<ResponseLoginAuthView> {
         const response: ResponseLoginAuthView = { access_token: '' };
         const user = await this.userRepository.findOne({ email: login.email });
+        if (!user) {
+            throw new HttpException({ error: `User with email ${login.email} is not found` }, 403);
+        }
         const credential = passwordHashHelper(login.password, user.salt);
         let payload: PayloadAuthView = {
             sub: user._id,
@@ -95,7 +98,9 @@ export class AuthService {
                     response.access_token = x
                 });
         }
-
+        if (user && credential.hashPassword !== user.hash) {
+            throw new HttpException({ error: `Password is not valid` }, 403);
+        }
         return response;
     }
 

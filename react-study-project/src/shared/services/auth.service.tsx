@@ -1,24 +1,40 @@
 import axios from 'axios';
-import { ILoginAuthView } from '../entities/auth/login-auth.view';
-import { IRegisterAuthView } from '../entities/auth/register-auth.view';
+import { ILoginAuthView } from '../interfaces/auth/login-auth.view';
+import { IRegisterAuthView } from '../interfaces/auth/register-auth.view';
 import { ToastMessagesSerivce } from './toast-messages.service';
+import { IResponseLoginAuthView } from '../interfaces/auth/response-login-auth.view';
+import { LocalStorageService } from './local-storage.service';
 
+const toastMessagesSerivce = new ToastMessagesSerivce();
+const localStorageService = new LocalStorageService();
 export class AuthService {
-    constructor (private readonly toastMessagesSerivce:ToastMessagesSerivce){}
-
     public async register(register: IRegisterAuthView): Promise<void> {
-        return axios.post(`${process.env.PUBLIC_URL}/auth/register`, register)
+        return await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/register`, register)
             .then(response => {
-                this.toastMessagesSerivce.success('Your register was successfull')
+                toastMessagesSerivce.success('Your register was successfull');
                 window.location.href = '/auth/login';
             })
             .catch(error => {
-                this.toastMessagesSerivce.error(error.response);
+                toastMessagesSerivce.error(error.response);
                 console.log(error.response);
             });
     }
 
-    public async login(login: ILoginAuthView): Promise<void> {
-        return axios.post(`${process.env.PUBLIC_URL}/auth/login`, login);
+    public async login(login: ILoginAuthView): Promise<IResponseLoginAuthView> {
+        let response: IResponseLoginAuthView = { access_token: '', errorMessage: '', errorStatusCode: 0 };
+        await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/login`, login)
+            .then(result => {
+                response = result.data
+            })
+            .catch(error => {
+                response.errorMessage = error.response.data.message;
+                response.errorStatusCode = error.response.data.statusCode;
+                console.log(error.response);
+            });
+        return response;
+    }
+
+    public isAuth():boolean{
+       return(!!localStorageService.getItem('currentUser'))
     }
 }
