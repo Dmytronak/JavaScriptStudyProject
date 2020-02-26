@@ -9,7 +9,9 @@ import { createStore, applyMiddleware } from "redux"
 import { LoginReducer } from './shared/reducers/auth/login.reducer';
 import { Provider } from 'react-redux';
 import { LoginSaga } from './shared/sagas/auth/login.saga';
+import JwtInterceptor from './shared/interceptors/jwt.interceptor';
 
+JwtInterceptor();
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
     LoginReducer,

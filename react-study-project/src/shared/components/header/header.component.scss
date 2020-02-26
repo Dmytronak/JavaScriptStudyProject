@@ -1,0 +1,34 @@
+nav {
+    position: flex;
+        flex-wrap: wrap;
+        top: 0;
+        width: 100%;
+        height: 77px;
+        padding-bottom: 10px;
+        z-index: 9999;
+        @media (prefers-reduced-motion: no-preference) {
+            .nav-logo { 
+                width: 5%;
+                animation: nav-logo-spin infinite 7s linear;
+            }
+        }
+        @keyframes nav-logo-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    h1{
+        a {
+            color: rgb(68, 68, 68);
+        }
+        a:hover {
+            color: rgb(68, 68, 68);
+            text-decoration:none;
+        }
+      
+    }  
+        
+}

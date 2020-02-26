@@ -1,6 +1,3 @@
-// Vendors
-import jwt_decode from "jwt-decode";
-
 // Services
 import { ToastMessagesSerivce } from '../../services/toast-messages.service';
 // History
@@ -23,15 +20,13 @@ export function LoginReducer(state: any, action: any) {
 
         case "@@AUTH/LOGIN_RECIVED": 
             {
-                const decode = jwt_decode(action.token)
-                localStorageService.setItem("currentUser", decode);
+                localStorageService.setItem("token", action.token);
                 return;
             }   
             
         case "@@AUTH/LOGIN_SUCCESS": 
             { 
                 history.goBack();
-               
                 return  window.location.reload();
             }     
         default:

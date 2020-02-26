@@ -3,7 +3,7 @@ import React from "react";
 const AdminBookComponent: React.FC = () => {
     return (
     <div>
-        AdminUserComponent!
+        AdminBookComponent!
     </div>
     );
 }

@@ -6,8 +6,7 @@ import { history } from "../configurations/browser-history.config";
 import { ProtectedRouteProps } from "../interfaces/routes/protected-route-props.view";
 const authService = new AuthService();
 
-
-export const OnlyLoggedInPrivateRoute = (props: ProtectedRouteProps) => {
+const OnlyLoggedInPrivateRoute = (props: ProtectedRouteProps) => {
   const { component: Component, ...rest } = props;
 
   history.push(`${props.location?.pathname}`);

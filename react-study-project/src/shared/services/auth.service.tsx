@@ -7,6 +7,7 @@ import { LocalStorageService } from './local-storage.service';
 
 const toastMessagesSerivce = new ToastMessagesSerivce();
 const localStorageService = new LocalStorageService();
+
 export class AuthService {
     public async register(register: IRegisterAuthView): Promise<void> {
         return await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/register`, register)
@@ -15,8 +16,7 @@ export class AuthService {
                 window.location.href = '/auth/login';
             })
             .catch(error => {
-                toastMessagesSerivce.error(error.response);
-                console.log(error.response);
+                toastMessagesSerivce.error(error.response.data.message);
             });
     }
 
@@ -29,12 +29,14 @@ export class AuthService {
             .catch(error => {
                 response.errorMessage = error.response.data.message;
                 response.errorStatusCode = error.response.data.statusCode;
-                console.log(error.response);
             });
         return response;
     }
 
+    public signOut():void{
+        localStorageService.removeItem('token');
+     }
     public isAuth():boolean{
-       return(!!localStorageService.getItem('currentUser'))
+       return(!!localStorageService.getItem('token'))
     }
 }

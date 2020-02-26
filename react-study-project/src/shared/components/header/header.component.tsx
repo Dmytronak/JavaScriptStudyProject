@@ -1,9 +1,11 @@
 // Vendors
-import React from 'react'
+import React from 'react';
+import jwt_decode from 'jwt-decode';
 // Style
-import "./header.scss"
+import "./header.component.scss"
 // Components
 import { LocalStorageService } from '../../services/local-storage.service';
+
 
 const localStorageService = new LocalStorageService();
 
@@ -12,17 +14,18 @@ export default class Header extends React.Component<any, any> {
         super(props)
         this.state = {
             showUser: false,
-            user: null
+            token: null
         }
     }
 
     componentDidMount(): void {
-        let activeUser = localStorageService.getItem("currentUser");
-        debugger
-        if (activeUser) {
+        const token = localStorageService.getItem("token");
+        if (token) {
+            const decode = JSON.stringify(jwt_decode(token));
+            const user = JSON.parse(decode);
             this.setState({
                 showUser: true,
-                user: activeUser
+                user: user.email
             })
         }
     }
@@ -31,12 +34,12 @@ export default class Header extends React.Component<any, any> {
         this.setState({
             showUSer: false
         })
-        localStorageService.removeItem("currentUser");
+        localStorageService.removeItem("token");
         window.location.reload();
     }
 
     public render() {
-        let user = this.state.user;
+        const user = this.state.user;               
         return (
             <header>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -54,16 +57,16 @@ export default class Header extends React.Component<any, any> {
                                 ?
                                 <ul className="nav justify-content-end">
                                     <li className="nav-item">
-                                        <a className="nav-link" href="admin">{user?.email}</a>
+                                        <a className="nav-link" href="admin">{user}</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="btn btn-outline-primary" onClick={() => this.logout()} href="auth/login">Sigh Out</a>
+                                        <a className="btn btn-outline-primary" onClick={() => this.logout()} href="auth/login">Sign Out</a>
                                     </li>
                                 </ul>
                                 :
                                 <ul className="nav justify-content-end">
                                     <li className="nav-item">
-                                        <a className="btn btn-outline-primary" href="auth/login">Sigh In</a>
+                                        <a className="btn btn-outline-primary" href="auth/login">Sign In</a>
                                     </li>
                                 </ul>
                         }
