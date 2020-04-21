@@ -15,16 +15,16 @@ export const OnlyLoggedOutPrivateRoute = (props: ProtectedRouteProps) => {
     <Route
       {...rest}
       render={(routeProps) =>
-        authService.isAuth() ? (
+        !authService.isAuth() ? (
+          <Component {...routeProps} />
+        ) : (
             <Redirect
               to={{
-                pathname: process.env.REACT_APP_HOME_PAGE,
+                pathname: process.env.REACT_APP_BOOK_PAGE,
                 state: { from: routeProps.location }
               }}
             />
-          ): (
-          <Component {...routeProps} />
-        ) 
+          )
       }
     />
   );

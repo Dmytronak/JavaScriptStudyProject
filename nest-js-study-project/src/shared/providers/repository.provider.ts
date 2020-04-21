@@ -1,4 +1,4 @@
-import { Connection, Repository } from 'typeorm';
+import { Connection } from 'typeorm';
 import { Role } from 'src/shared/entities/role.entity';
 import { Author } from 'src/shared/entities/author.entity';
 import { Book } from 'src/shared/entities/book.entity';

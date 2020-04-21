@@ -1,14 +1,13 @@
-// Vendors
 import React from 'react'
 import '../login/login.component.scss'
 import { connect } from 'react-redux';
-// Interfaces
 import { ILoginAuthView } from '../../../shared/interfaces/auth/login-auth.view';
+import { Link } from 'react-router-dom';
 
-class LoginComponent extends React.Component<any, any> {
+export class LoginComponent extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
-
+        
         this.state = {
             loginFields: {
                 email: '',
@@ -45,7 +44,7 @@ class LoginComponent extends React.Component<any, any> {
         return (
             <div className="card login-card-center">
                 <article className="card-body">
-                    <a href="/auth/register" className="float-right btn btn-outline-primary">Sign up</a>
+                    <Link to="/auth/register" className="float-right btn btn-outline-primary">Sign up</Link>
                     <h4 className="card-title mb-4 mt-1">Sign in</h4>
                     <form>
                         <div className="form-group">

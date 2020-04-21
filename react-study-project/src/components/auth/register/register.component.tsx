@@ -1,10 +1,13 @@
 import React from "react";
 import '../register/register.component.scss'
+import { Link } from "react-router-dom";
+import { AuthService } from "../../../shared/services/auth.service";
+const authService = new AuthService();
 const RegisterComponent: React.FC = () => {
     return (
         <div className="card register-card-center">
             <article className="card-body">
-                <a href="/auth/login" className="float-right btn btn-outline-primary">Sign in</a>
+                <Link to="/auth/login" className="float-right btn btn-outline-primary">Sign in</Link>
                 <h4 className="card-title mb-4 mt-1">Sign up</h4>
                 <form>
                     <div className="form-group">

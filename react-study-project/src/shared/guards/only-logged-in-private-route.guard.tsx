@@ -20,7 +20,7 @@ const OnlyLoggedInPrivateRoute = (props: ProtectedRouteProps) => {
         ) : (
             <Redirect
               to={{
-                pathname: process.env.REACT_APP_LOGIN_PAGE,
+                pathname: process.env.REACT_APP_HOME_PAGE,
                 state: { from: routeProps.location }
               }}
             />

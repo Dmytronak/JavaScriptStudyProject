@@ -14,12 +14,12 @@ import OnlyAdminPrivateRoute from "../guards/only-admin-private-route.guard";
 const Routes: React.FC = () => {
   return (
     <main>
-      <Header/>
+      <Header />
       <Switch>
         <Route path='/' component={HomeComponent} exact />
         <OnlyLoggedOutPrivateRoute path='/auth/login' component={LoginComponent} />
         <OnlyLoggedOutPrivateRoute path='/auth/register' component={RegisterComponent} />
-        <OnlyLoggedInPrivateRoute path='/home' exact={true} component={HomeComponent} />
+        <OnlyLoggedOutPrivateRoute path='/home' exact={true} component={HomeComponent} />
         <OnlyLoggedInPrivateRoute path='/books' exact={true} component={BookComponent} />
         <OnlyAdminPrivateRoute path='/admin' exact={true} component={AdminMainComponent} />
         <OnlyAdminPrivateRoute path='/admin/user' exact={true} component={AdminUserComponent} />

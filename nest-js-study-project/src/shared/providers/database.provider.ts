@@ -8,7 +8,7 @@ export const databaseProvider = [
         host: process.env.HOST,
         port: parseInt(process.env.PORT_MONGODB),
         database : process.env.MONGODB_DB_NAME,
-        entities: [process.env.ENTITIES],
+        entities: [`${__dirname}${process.env.ENTITIES}`],
         synchronize:true,
         useUnifiedTopology:true
       }),

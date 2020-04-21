@@ -15,7 +15,6 @@ export function* LoginSaga(): IterableIterator<{}> {
             return;
         }
         yield put({
-
             type: '@@AUTH/LOGIN_RECIVED',
             token: response.access_token
         })

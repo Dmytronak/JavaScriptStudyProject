@@ -1,6 +1,5 @@
 import React from "react";
 import "./book.component.scss"
-import { RouteComponentProps } from "react-router-dom";
 
 export class BookComponent extends React.Component<any,any> {
    render(){

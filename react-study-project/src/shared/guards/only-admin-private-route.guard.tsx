@@ -1,7 +1,5 @@
 import { Route, Redirect } from "react-router-dom";
 import React from "react";
-
-import { AuthService } from "../services/auth.service";
 import jwtDecode from "jwt-decode"
 import { history } from "../configurations/browser-history.config";
 import { ProtectedRouteProps } from "../interfaces/routes/protected-route-props.view";
@@ -14,8 +12,8 @@ const OnlyAdminPrivateRoute = (props: ProtectedRouteProps) => {
     const token = localStorageService.getItem(`${process.env.REACT_APP_LOCAL_STORAGE_TOKEN}`);
     const decodeToken = JSON.parse(JSON.stringify(jwtDecode(token)));
     const userRoles = decodeToken['roles'];
-    userRoles.forEach((e: any) => {
-        if (e === 'admin') {
+    userRoles.forEach((element: string) => {
+        if (element === 'admin') {
             isAdmin = true;
         }
     });

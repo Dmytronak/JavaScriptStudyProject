@@ -14,7 +14,8 @@ export const JwtInterceptor = () => {
             config.headers.Authorization = `Bearer ${token}`
         }
         return config;
-    }, function (error) {
+    }, 
+    function (error) {
         return Promise.reject(error);
     });
 
@@ -24,7 +25,8 @@ export const JwtInterceptor = () => {
             toastMessagesSerivce.error('Sorry but your account is no authorize');
         }
         return response;
-    }, function (error) {
+    }, 
+    function (error) {
         return Promise.reject(error);
     });
 };

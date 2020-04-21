@@ -4,6 +4,8 @@ import { IRegisterAuthView } from '../interfaces/auth/register-auth.view';
 import { ToastMessagesSerivce } from './toast-messages.service';
 import { IResponseLoginAuthView } from '../interfaces/auth/response-login-auth.view';
 import { LocalStorageService } from './local-storage.service';
+import { SharedConstants } from '../constants/shared.constant';
+import { AuthConstants } from '../constants/auth.constant';
 
 const toastMessagesSerivce = new ToastMessagesSerivce();
 const localStorageService = new LocalStorageService();
@@ -21,22 +23,23 @@ export class AuthService {
     }
 
     public async login(login: ILoginAuthView): Promise<IResponseLoginAuthView> {
-        let response: IResponseLoginAuthView = { access_token: '', errorMessage: '', errorStatusCode: 0 };
+        let result: IResponseLoginAuthView = { access_token: SharedConstants.EMPTY_VALUE, errorMessage: SharedConstants.EMPTY_VALUE, errorStatusCode: SharedConstants.ZERO_VALUE };
         await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/login`, login)
-            .then(result => {
-                response = result.data
+            .then(response => {
+                result = response.data
             })
             .catch(error => {
-                response.errorMessage = error.response.data.message;
-                response.errorStatusCode = error.response.data.statusCode;
+                result.errorMessage = error.response.data.message;
+                result.errorStatusCode = error.response.data.statusCode;
             });
-        return response;
+        return result;
     }
 
-    public signOut():void{
-        localStorageService.removeItem('token');
-     }
-    public isAuth():boolean{
-       return(!!localStorageService.getItem('token'))
+    public signOut(): void {
+        localStorageService.removeItem(AuthConstants.AUTH_TOKEN_KEY);
+    }
+    public isAuth(): boolean {
+        const result:boolean = !!localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
+        return result;
     }
 }
