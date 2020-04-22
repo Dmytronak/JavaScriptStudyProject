@@ -38,6 +38,7 @@ export class AuthService {
     }
 
     public async register(register: RegisterAuthView): Promise<void> {
+
         const isExistEmail = await this.userRepository.findOne({ email: register.email });
         if (isExistEmail) {
             throw new HttpException({ error: `Email ${register.email} is already taken` }, 403);
@@ -47,7 +48,6 @@ export class AuthService {
         if (!role) {
             throw new HttpException({ error: `Role USER didn't find` }, 403);
         }
-
         const credential = passwordHashHelper(register.password, null);
         const user: User = new User();
         user.email = register.email;
@@ -58,7 +58,7 @@ export class AuthService {
         user.salt = credential.salt;
         user.age = register.age;
         user.roles = [role];
-
+        console.log(user)
         await this.userRepository.save(user);
     }
 

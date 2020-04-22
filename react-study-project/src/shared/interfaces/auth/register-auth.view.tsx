@@ -6,4 +6,14 @@ export interface IRegisterAuthView {
     password: string;
     confirmPassword: string;
     age: number;
+    errors:ErrorIRegisterAuthView;
+}
+
+export interface ErrorIRegisterAuthView{
+    emailNotValidText: string;
+    firstNameNotValidText: string;
+    lastNameNotValidText: string;  
+    passwordNotValidText: string;
+    confirmPasswordNotValidText: string;
+    ageNotValidText: string;
 }

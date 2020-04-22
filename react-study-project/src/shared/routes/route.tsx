@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/header/header.component";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect, Link } from "react-router-dom";
 import HomeComponent from "../../components/home/home.component";
 import LoginComponent from "../../components/auth/login/login.component";
 import RegisterComponent from "../../components/auth/register/register.component";
@@ -16,7 +16,7 @@ const Routes: React.FC = () => {
     <main>
       <Header />
       <Switch>
-        <Route path='/' component={HomeComponent} exact />
+        <Route path='/' component={()=><Redirect to='/books' />} exact />
         <OnlyLoggedOutPrivateRoute path='/auth/login' component={LoginComponent} />
         <OnlyLoggedOutPrivateRoute path='/auth/register' component={RegisterComponent} />
         <OnlyLoggedOutPrivateRoute path='/home' exact={true} component={HomeComponent} />

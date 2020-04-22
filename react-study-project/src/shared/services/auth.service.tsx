@@ -37,6 +37,7 @@ export class AuthService {
 
     public signOut(): void {
         localStorageService.removeItem(AuthConstants.AUTH_TOKEN_KEY);
+        window.location.reload();
     }
     public isAuth(): boolean {
         const result:boolean = !!localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);

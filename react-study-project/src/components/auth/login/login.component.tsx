@@ -49,22 +49,12 @@ export class LoginComponent extends React.Component<any, any> {
                     <form>
                         <div className="form-group">
                             <label>Email</label>
-                            <input className="form-control"
-                                placeholder="Email"
-                                name="email"
-                                value={this.state.loginFields.email || ""}
-                                onChange={this.handleInputChange}
-                                type="email" />
+                            <input className="form-control" placeholder="Email" name="email" value={this.state.loginFields.email || ""} onChange={this.handleInputChange} type="email" />
                         </div>
                         <div className="form-group">
                             <a className="float-right" href="/*">Forgot?</a>
                             <label>Password</label>
-                            <input className="form-control"
-                                placeholder="Password "
-                                name="password"
-                                value={this.state.loginFields.password}
-                                onChange={this.handleInputChange}
-                                type="password" />
+                            <input className="form-control" placeholder="Password " name="password" value={this.state.loginFields.password} onChange={this.handleInputChange} type="password" />
                         </div>
                         <div className="form-group">
                             <button type="button" onClick={()=>this.login()} className="btn btn-primary btn-block">Login</button>

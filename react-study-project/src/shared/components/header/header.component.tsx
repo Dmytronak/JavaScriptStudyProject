@@ -42,9 +42,19 @@ export default class Header extends React.Component<any, any> {
             <header>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <img src={`${process.env.PUBLIC_URL}/react-icon-png-4.png`} className="nav-logo" alt="logo" />
-                    <h1>
-                        <Link to="/">React Study</Link>
-                    </h1>
+                    {
+                        this.state.showUser
+                            ? 
+                            <h1>
+                                <Link to="/home">React Study</Link>
+                            </h1>
+                            :
+                            <h1>
+                                <Link to="/books">React Study</Link>
+                            </h1>
+                    }
+
+
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>

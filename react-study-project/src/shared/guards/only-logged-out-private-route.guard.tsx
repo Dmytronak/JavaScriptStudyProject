@@ -4,6 +4,7 @@ import React from "react";
 import { AuthService } from "../services/auth.service";
 import { history } from "../configurations/browser-history.config";
 import { ProtectedRouteProps } from "../interfaces/routes/protected-route-props.view";
+
 const authService = new AuthService();
 
 
