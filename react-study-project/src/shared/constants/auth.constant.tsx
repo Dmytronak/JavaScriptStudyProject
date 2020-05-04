@@ -19,5 +19,9 @@ export const AuthConstants = {
     NOT_VALID_REQUIRED_FIELD:'Required field',
     NOT_VALID_EMAIL:'Email is not valid',
     NOT_VALID_PASSWORD:'Password is not valid',
-    NOT_VALID_MUST_MATCH_PASSWORD:'Confirm password must be the same as password'
+    NOT_VALID_MUST_MATCH_PASSWORD:'Confirm password must be the same as password',
+
+    ERROR_MESSAGE_UNAUTHORIZE:'Sorry but your account is no authorize',
+
+    ERROR_CODE_UNAUTHORIZE:401
 }

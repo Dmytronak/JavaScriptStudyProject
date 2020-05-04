@@ -1,5 +1,11 @@
 export const SharedConstants = {
     EMPTY_VALUE:'',
     ZERO_VALUE:0,
-    ONE_VALUE:1
+    ONE_VALUE:1,
+
+    STRING_ONE_VALUE:'1',
+    STRING_FOUR_VALUE:'4',
+    
+
+    CHECKBOX_TYPE:'checkbox'
 }

@@ -1,0 +1,13 @@
+.books-group{
+    margin: 0 auto;
+    max-width: 900px;
+}
+.books-items{
+    display: flex;
+    justify-content: center;  
+    flex-wrap: wrap;
+}
+.card-book{
+    width: 18rem;
+    margin: 8px;
+}

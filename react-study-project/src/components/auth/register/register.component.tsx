@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import '../register/register.component.scss'
 import { Link } from "react-router-dom";
 import { AuthService } from "../../../shared/services/auth.service";
@@ -6,6 +6,7 @@ import { IRegisterAuthView } from "../../../shared/interfaces/auth/register-auth
 import { AuthConstants } from "../../../shared/constants/auth.constant";
 import {  MustMatchValidator } from "../../../shared/validators/must-match.validator";
 import { PasswordValidator } from "../../../shared/validators/password.validator";
+import { SharedConstants } from "../../../shared/constants/shared.constant";
 
 const authService = new AuthService();
 const RegisterComponent: React.FC = () => {
@@ -16,7 +17,7 @@ const RegisterComponent: React.FC = () => {
         fullName: AuthConstants.EMPTY_VALUE,
         password: AuthConstants.EMPTY_VALUE,
         confirmPassword: AuthConstants.EMPTY_VALUE,
-        age: 0,
+        age: SharedConstants.ZERO_VALUE,
         errors: {
             emailNotValidText: AuthConstants.EMPTY_PAST_VALUE,
             firstNameNotValidText: AuthConstants.EMPTY_PAST_VALUE,

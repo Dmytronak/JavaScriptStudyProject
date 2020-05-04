@@ -3,6 +3,7 @@ import jwt_decode from 'jwt-decode';
 import './header.component.scss';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { Link } from 'react-router-dom';
+import { AuthConstants } from '../../constants/auth.constant';
 
 
 const localStorageService = new LocalStorageService();
@@ -17,9 +18,9 @@ export default class Header extends React.Component<any, any> {
     }
 
     componentDidMount(): void {
-        const token = localStorageService.getItem('token');
+        const token = localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
         if (token) {
-            const decode = JSON.stringify(jwt_decode(token));
+            const decode:string = JSON.stringify(jwt_decode(token));
             const user = JSON.parse(decode);
             this.setState({
                 showUser: true,
@@ -32,7 +33,7 @@ export default class Header extends React.Component<any, any> {
         this.setState({
             showUSer: false
         })
-        localStorageService.removeItem('token');
+        localStorageService.removeItem(AuthConstants.AUTH_TOKEN_KEY);
         window.location.reload();
     }
 

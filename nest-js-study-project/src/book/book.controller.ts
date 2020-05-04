@@ -28,18 +28,12 @@ export class BookController {
         return response;
     }
 
-    @Post('/filterByPriceRange')
-    async filterByPriceRange(@Body()requestFilterBookView:RequestFilterBookView):Promise<ResponseFilterBookView>{
-        return await this.bookService.filterByPriceRange(requestFilterBookView);
-    }
-
-    @Post('/filterByType')
-    async filterByType(@Body()requestFilterBookView:RequestFilterBookView):Promise<ResponseFilterBookView>{
-        return await this.bookService.filterByType(requestFilterBookView);
-    }
-
     @Post('/filteredBooks')
-    async filteredBooks(@Body()filteredBooksRequestView:FilteredBooksRequestView): Promise<GetFilteredBookView> {
-        return await this.bookService.filteredBooks(filteredBooksRequestView);
+    async filteredBooks(@Body()requestFilterBookView:RequestFilterBookView): Promise<GetFilteredBookView> {
+        return await this.bookService.filteredBooks(requestFilterBookView);
+    }
+    @Post('/filteredBooksByIds')
+    async filteredBooksByIds(@Body()filteredBooksRequestView:FilteredBooksRequestView): Promise<GetFilteredBookView> {
+        return await this.bookService.filteredBooksByIds(filteredBooksRequestView);
     }
 }

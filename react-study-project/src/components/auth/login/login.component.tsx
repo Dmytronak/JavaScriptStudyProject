@@ -3,6 +3,7 @@ import '../login/login.component.scss'
 import { connect } from 'react-redux';
 import { ILoginAuthView } from '../../../shared/interfaces/auth/login-auth.view';
 import { Link } from 'react-router-dom';
+import { SharedConstants } from '../../../shared/constants/shared.constant';
 
 export class LoginComponent extends React.Component<any, any> {
     constructor(props: any) {
@@ -18,10 +19,10 @@ export class LoginComponent extends React.Component<any, any> {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    private handleInputChange(event: any): void {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+    private handleInputChange(event: React.SyntheticEvent<HTMLInputElement>): void {
+        const target:EventTarget & HTMLInputElement = event.currentTarget;
+        const value:string | boolean = target.type === SharedConstants.CHECKBOX_TYPE ? target.checked : target.value;
+        const name:string = target.name;
 
         this.setState((prevState: {
             loginFields: {

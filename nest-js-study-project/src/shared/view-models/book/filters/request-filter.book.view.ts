@@ -13,4 +13,7 @@ export class RequestFilterBookView {
     
     @ApiProperty()
     type: BookType;
+    
+    @ApiProperty()
+    page:number;
 }
