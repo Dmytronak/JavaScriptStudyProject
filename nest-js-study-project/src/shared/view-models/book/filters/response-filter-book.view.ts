@@ -2,6 +2,8 @@ import { BookType } from "src/shared/enums/book-type.enum";
 
 export class ResponseFilterBookView {
     quantity:number;
+    minPrice:number;
+    maxPrice:number;
     books: BookResponseFilterBookViewItem[] = []
 }
 

@@ -9,8 +9,8 @@ const BookComponent: React.FC<IBookGetAllBookResponseViewItem> = (book:IBookGetA
         return BookType[bookType];
     };
     return (
-        <div className="card-book" key={book.id}>
-            <img className="card-img-top" src={BookConstants.BOOK_LINK} alt="book-image" />
+        <div className="card-book">
+            <img className="book-card-img" src={BookConstants.BOOK_LINK} alt="book-image" />
             <div className="card-body">
                 <h5 className="card-title">{book.title}</h5>
                 {
@@ -22,6 +22,7 @@ const BookComponent: React.FC<IBookGetAllBookResponseViewItem> = (book:IBookGetA
                 }
                 <p className="card-text">{getBookType(book.type)}</p>
                 <p className="card-text">{book.price} $</p>
+                <button className="btn btn-outline-success">Add to shoping cart</button>
             </div>
         </div>
 

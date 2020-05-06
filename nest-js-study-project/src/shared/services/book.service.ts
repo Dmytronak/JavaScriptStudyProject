@@ -9,6 +9,7 @@ import { FilteredBooksRequestView } from 'src/shared/view-models/book/filters/re
 import { GetAllBookView, BookGetAllBookViewItem, AuthorBookGetAllBookViewItem } from 'src/shared/view-models/book/get-all-book.view';
 import { SharedConstants } from '../constants/shared.constants';
 import { response } from 'express';
+import { GetPriceRangeBookView } from '../view-models/book/get-price-range-book.view';
 
 @Injectable()
 export class BookService {
@@ -21,7 +22,6 @@ export class BookService {
     public async getAllBooksCount(): Promise<number> {
         return await this.bookRepository.count();
     }
-
     public async getAllBooks(): Promise<GetAllBookView> {
         const response: GetAllBookView = new GetAllBookView();
         await this.bookRepository.find()
@@ -72,6 +72,7 @@ export class BookService {
                 }
             })
             .then(result => {
+                response.quantity = result.length;
                 response.books = result
                     .map(x => {
                         const item: BookResponseFilterBookViewItem = {
@@ -95,6 +96,7 @@ export class BookService {
     }
     public async filteredBooks(requestFilterBookView: RequestFilterBookView): Promise<GetFilteredBookView> {
         const response: GetFilteredBookView = new GetFilteredBookView();
+        requestFilterBookView.searchString = requestFilterBookView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterBookView.searchString : null;
         const offset = (requestFilterBookView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
         await this.bookRepository
             .find({
@@ -128,6 +130,7 @@ export class BookService {
                 take: this.paginationModel.maxSize
             })
             .then(result => {
+                response.collectionSize = result.length;
                 response.books = result.map(x => {
                     const item: BookGetFilteredBookViewItem = {
                         id: x._id.toString(),
@@ -146,6 +149,7 @@ export class BookService {
                     return item;
                 })
             });
+        response.collectionSize = (await this.getFilteredBookCount(requestFilterBookView))
         if (response.collectionSize === SharedConstants.ZERO_VALUE) {
             await this.bookRepository
                 .find({
@@ -171,11 +175,11 @@ export class BookService {
                         return item;
                     })
                 });
+            response.collectionSize = (await this.getAllBooksCount())
         }
-        await this.getFilteredBookCount(requestFilterBookView)
-        .then(x=>{
-            response.collectionSize = x;
-        });
+        const range:GetPriceRangeBookView = (await this.getPriceRange());
+        response.minPrice = range.minPrice
+        response.maxPrice = range.maxPrice;
         return response;
 
     }
@@ -227,39 +231,52 @@ export class BookService {
         return response;
 
     }
+
     private async getFilteredBookCount(requestFilterBookView: RequestFilterBookView) {
-        let response = 0;
+        let response = SharedConstants.ZERO_VALUE;
+        requestFilterBookView.searchString = requestFilterBookView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterBookView.searchString : null;
         await this.bookRepository.find({
-                where: {
-                    $or: [
-                        {
-                            title: {
-                                $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
-                            }
-                        }, {
-                            authors: {
-                                $elemMatch: {
-                                    fullName: {
-                                        $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
-                                    }
+            where: {
+                $or: [
+                    {
+                        title: {
+                            $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
+                        }
+                    }, {
+                        authors: {
+                            $elemMatch: {
+                                fullName: {
+                                    $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
                                 }
                             }
-                        },
-                        {
-                            type: requestFilterBookView.type
-                        },
-                        {
-                            price: {
-                                $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
-                            }
                         }
-                    ],
+                    },
+                    {
+                        type: requestFilterBookView.type
+                    },
+                    {
+                        price: {
+                            $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
+                        }
+                    }
+                ],
 
-                }
-            })
-            .then(x=>{
+            }
+        })
+            .then(x => {
                 response = x.length;
             })
-            return response;
+        return response;
+    }
+    private async getPriceRange(): Promise<GetPriceRangeBookView> {
+        const response = new GetPriceRangeBookView();
+        const prices = await this.bookRepository.find()
+            .then((response: Book[]) => {
+                var number = response.map(x => x.price);
+                return number;
+            });
+        response.minPrice = Math.min(...prices);
+        response.maxPrice = Math.max(...prices);
+        return response;
     }
 }

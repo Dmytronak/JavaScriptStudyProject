@@ -1,13 +1,15 @@
-.books-group{
-    margin: 0 auto;
-    max-width: 900px;
-}
-.books-items{
-    display: flex;
-    justify-content: center;  
-    flex-wrap: wrap;
-}
 .card-book{
     width: 18rem;
     margin: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    .book-card-img{
+        flex-shrink: 0;
+        width: 80%;
+        margin: 20px;
+    }
 }
+.card-book:hover {
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
+  }
