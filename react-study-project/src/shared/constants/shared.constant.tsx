@@ -9,5 +9,7 @@ export const SharedConstants = {
 
     CHECKBOX_TYPE:'checkbox',
     
+    MIN_KEY:'min',
+    MAX_KEY:'max',
     ENUM_NONE_ALL_NAME:'All'
 }

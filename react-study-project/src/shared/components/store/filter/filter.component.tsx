@@ -13,7 +13,14 @@ const bookService: BookService = new BookService();
 const RangeWithTooltip = createSliderWithTooltip(Range);
 
 const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
-
+    const [priceRange, setPriceRange] = React.useState<any>({
+        min: 0,
+        max: 100
+    });
+    let [priceRangeMarksValue, setPriceRangeMarksValue] = React.useState<any>({
+        0: <strong>0$</strong>,
+        100: <strong>100$</strong>
+    });
     const [criterias, setCriterias] = React.useState<FilterBookView>({
         page: PaginationCongfig.pageNumber,
         priceMin: SharedConstants.ZERO_VALUE,
@@ -22,21 +29,35 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
         type: BookType.None
     });
     useEffect(() => {
-        bookService.filteredBooks(criterias)
-            .then((response: IFilteredBookResponseView) => {
-                outputFilteredBooks(response);
-            });
+        getBookData(criterias);
 
     }, []);
 
-    const priceRangeMarks = {
-        0: <strong>0$</strong>,
-        100: <strong>100$</strong>
-    };
     const getBookData = (criterias: FilterBookView) => {
         bookService.filteredBooks(criterias)
             .then((response: IFilteredBookResponseView) => {
                 outputFilteredBooks(response);
+                const priceRange = {
+                    min:response.minPrice,
+                    max:response.maxPrice
+                };
+                const priceRangeMarks = {
+                    min:<strong>{response.minPrice}$</strong>,
+                    max:<strong>{response.maxPrice}$</strong>
+                }
+                const priceRangeMarksReplace = Object.keys(priceRangeMarks).map((key)=>{
+                    if(key ==='min'){
+                        const newKey = response.minPrice || key;
+                        return { [newKey] : priceRangeMarks[key] }; 
+                    }
+                    if(key ==='max'){
+                        const newKey = response.maxPrice || key;
+                        return { [newKey] : priceRangeMarks[key] }; 
+                    }
+                });
+                const priceRangeMarksReplaced = priceRangeMarksReplace.reduce((a, b) => Object.assign({}, a, b));
+                setPriceRange(priceRange);
+                setPriceRangeMarksValue(priceRangeMarksReplaced);
             });
     }
     const searchBookByNames = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -75,8 +96,10 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
                 <p>Price range</p>
                 <RangeWithTooltip
                     allowCross={false}
-                    marks={priceRangeMarks}
-                    defaultValue={[0,0]}
+                    min={priceRange.min} 
+                    max={priceRange.max}
+                    marks={priceRangeMarksValue}
+                    defaultValue={[priceRange.min,priceRange.max]}
                     onChange={priceRangeChange}
                     tipFormatter={(value: {}) => `${value}$`}
                 />
