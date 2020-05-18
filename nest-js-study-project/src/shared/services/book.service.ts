@@ -8,8 +8,8 @@ import { BookGetFilteredBookViewItem, AuthorBookGetFilteredBookViewItem, GetFilt
 import { FilteredBooksRequestView } from 'src/shared/view-models/book/filters/request-get-filtered-books.view';
 import { GetAllBookView, BookGetAllBookViewItem, AuthorBookGetAllBookViewItem } from 'src/shared/view-models/book/get-all-book.view';
 import { SharedConstants } from '../constants/shared.constants';
-import { response } from 'express';
 import { GetPriceRangeBookView } from '../view-models/book/get-price-range-book.view';
+import { BookType } from '../enums/book-type.enum';
 
 @Injectable()
 export class BookService {
@@ -98,39 +98,72 @@ export class BookService {
         const response: GetFilteredBookView = new GetFilteredBookView();
         requestFilterBookView.searchString = requestFilterBookView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterBookView.searchString : null;
         const offset = (requestFilterBookView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
+        const titleSearch = {
+            title: {
+                $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
+            }
+        };
+
+        const authorSearch = {
+            authors: {
+                $elemMatch: {
+                    fullName: {
+                        $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
+                    }
+                }
+            }
+        };
+        const priceSearch = {
+            price: {
+                $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
+            }    
+        };
+        const typeSearch = {
+            type: requestFilterBookView.type
+        }
+        let searchModel = {};
+
+        if(requestFilterBookView.searchString !==null){
+            searchModel = { 
+                $and: [{ $or:[titleSearch,authorSearch]}],
+            }
+        }
+        if(requestFilterBookView.type !==BookType.None){
+            let query= searchModel['$and'];
+            if(!query){
+                searchModel = {
+                    $and: [typeSearch]
+                };
+            }
+            if(query){
+                query.push(typeSearch);
+                searchModel = {
+                    $and: query
+                };
+            }
+        }
+        if(requestFilterBookView.priceMin!==SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !==SharedConstants.ZERO_VALUE){
+            let query= searchModel['$and'];
+            if(!query){
+                searchModel = {
+                    $and: [priceSearch]
+                };
+            }
+            if(query){
+                query.push(priceSearch);
+                searchModel = {
+                    $and: query
+                };
+            }
+        }
+        
         await this.bookRepository
             .find({
-                where: {
-                    $or: [
-                        {
-                            title: {
-                                $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
-                            }
-                        }, {
-                            authors: {
-                                $elemMatch: {
-                                    fullName: {
-                                        $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            type: requestFilterBookView.type
-                        },
-                        {
-                            price: {
-                                $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
-                            }
-                        }
-                    ],
-
-                },
+                where: searchModel,
                 skip: offset,
                 take: this.paginationModel.maxSize
             })
             .then(result => {
-                response.collectionSize = result.length;
                 response.books = result.map(x => {
                     const item: BookGetFilteredBookViewItem = {
                         id: x._id.toString(),
@@ -150,33 +183,6 @@ export class BookService {
                 })
             });
         response.collectionSize = (await this.getFilteredBookCount(requestFilterBookView))
-        if (response.collectionSize === SharedConstants.ZERO_VALUE) {
-            await this.bookRepository
-                .find({
-                    skip: offset,
-                    take: this.paginationModel.maxSize
-                })
-                .then(result => {
-                    response.books = result.map(x => {
-                        const item: BookGetFilteredBookViewItem = {
-                            id: x._id.toString(),
-                            title: x.title,
-                            type: x.type,
-                            price: x.price,
-                            authors: x.authors
-                                .map(resultAuthors => {
-                                    const item: AuthorBookGetFilteredBookViewItem = {
-                                        id: resultAuthors._id.toString(),
-                                        fullName: resultAuthors.fullName
-                                    };
-                                    return item;
-                                })
-                        };
-                        return item;
-                    })
-                });
-            response.collectionSize = (await this.getAllBooksCount())
-        }
         const range:GetPriceRangeBookView = (await this.getPriceRange());
         response.minPrice = range.minPrice
         response.maxPrice = range.maxPrice;
@@ -235,33 +241,66 @@ export class BookService {
     private async getFilteredBookCount(requestFilterBookView: RequestFilterBookView) {
         let response = SharedConstants.ZERO_VALUE;
         requestFilterBookView.searchString = requestFilterBookView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterBookView.searchString : null;
-        await this.bookRepository.find({
-            where: {
-                $or: [
-                    {
-                        title: {
-                            $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
-                        }
-                    }, {
-                        authors: {
-                            $elemMatch: {
-                                fullName: {
-                                    $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
-                                }
-                            }
-                        }
-                    },
-                    {
-                        type: requestFilterBookView.type
-                    },
-                    {
-                        price: {
-                            $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
-                        }
-                    }
-                ],
-
+        const titleSearch = {
+            title: {
+                $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
             }
+        };
+
+        const authorSearch = {
+            authors: {
+                $elemMatch: {
+                    fullName: {
+                        $regex: `.*${requestFilterBookView.searchString}.*`, $options: 'i'
+                    }
+                }
+            }
+        };
+        const priceSearch = {
+            price: {
+                $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
+            }    
+        };
+        const typeSearch = {
+            type: requestFilterBookView.type
+        }
+        let searchModel = {};
+        
+        if(requestFilterBookView.searchString !==null){
+            searchModel = { 
+                $and: [{ $or:[titleSearch,authorSearch]}],
+            }
+        }
+        if(requestFilterBookView.type !==BookType.None){
+            let query= searchModel['$and'];
+            if(!query){
+                searchModel = {
+                    $and: [typeSearch]
+                };
+            }
+            if(query){
+                query.push(typeSearch);
+                searchModel = {
+                    $and: query
+                };
+            }
+        }
+        if(requestFilterBookView.priceMin!==SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !==SharedConstants.ZERO_VALUE){
+            let query= searchModel['$and'];
+            if(!query){
+                searchModel = {
+                    $and: [priceSearch]
+                };
+            }
+            if(query){
+                query.push(priceSearch);
+                searchModel = {
+                    $and: query
+                };
+            }
+        }
+        await this.bookRepository.find({
+          where: searchModel
         })
             .then(x => {
                 response = x.length;
@@ -272,7 +311,7 @@ export class BookService {
         const response = new GetPriceRangeBookView();
         const prices = await this.bookRepository.find()
             .then((response: Book[]) => {
-                var number = response.map(x => x.price);
+                const number = response.map(x => x.price);
                 return number;
             });
         response.minPrice = Math.min(...prices);

@@ -7,6 +7,7 @@ import { BookService } from "../../../services/book.service";
 import { Range, createSliderWithTooltip } from "rc-slider";
 import { IFilteredBookResponseView } from "../../../interfaces/responses/book/filtered-book-response.view";
 import "./filter.component.scss"
+import { EnumToArrayHelper } from "../../../helpers/enum-to-array.helper";
 
 const bookService: BookService = new BookService();
 const RangeWithTooltip = createSliderWithTooltip(Range);
@@ -20,28 +21,9 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
         searchString: SharedConstants.EMPTY_VALUE,
         type: BookType.None
     });
-    const [store, setBooksToModel] = React.useState<IFilteredBookResponseView>({
-        collectionSize: SharedConstants.ZERO_VALUE,
-        minPrice:SharedConstants.ZERO_VALUE,
-        maxPrice:SharedConstants.ONE_VALUE,
-        books: [{
-            id: SharedConstants.EMPTY_VALUE,
-            title: SharedConstants.EMPTY_VALUE,
-            type: BookType.None,
-            price: SharedConstants.ZERO_VALUE,
-            authors: [{
-                id: SharedConstants.EMPTY_VALUE,
-                fullName: SharedConstants.EMPTY_VALUE,
-            }]
-        }],
-
-    });
-
     useEffect(() => {
         bookService.filteredBooks(criterias)
             .then((response: IFilteredBookResponseView) => {
-                criterias.priceMin = response.minPrice;
-                criterias.priceMax = response.maxPrice;
                 outputFilteredBooks(response);
             });
 
@@ -69,7 +51,18 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
     const searchBooksByPriceRange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         getBookData(criterias);
     }
-
+    const searchBooksBytType = (event:React.ChangeEvent<HTMLSelectElement>)=>{
+        const value = parseInt(event.currentTarget.value);
+        criterias.type = value;
+        getBookData(criterias);
+    }
+    const bookTypes = EnumToArrayHelper(BookType);
+    const getTypeName = (number:number):string =>{
+        if(number === BookType.None){
+            return SharedConstants.ENUM_NONE_ALL_NAME;
+        }
+        return BookType[number];
+    }
     return (
         <div className="filter-group">
             <div className="filter-search">
@@ -83,16 +76,22 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
                 <RangeWithTooltip
                     allowCross={false}
                     marks={priceRangeMarks}
-                    defaultValue={[1,14]}
-                    tipProps={{align:{
-                        offset: [0, -5]
-                    }}}
-                 
+                    defaultValue={[0,0]}
                     onChange={priceRangeChange}
                     tipFormatter={(value: {}) => `${value}$`}
                 />
             </div>
             <button className="btn btn-outline-success" onClick={searchBooksByPriceRange}>Ok</button>
+            <div className="filter-type">
+                <p>Book type</p>
+                <select onChange={searchBooksBytType}>
+                {
+                    bookTypes.map(x=>{
+                        return <option value={x} key={x}>{getTypeName(x)}</option>
+                    })
+                }
+                </select>
+            </div>
         </div>
     )
 }

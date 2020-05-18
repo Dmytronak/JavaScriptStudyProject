@@ -7,5 +7,7 @@ export const SharedConstants = {
     STRING_FOUR_VALUE:'4',
     
 
-    CHECKBOX_TYPE:'checkbox'
+    CHECKBOX_TYPE:'checkbox',
+    
+    ENUM_NONE_ALL_NAME:'All'
 }
