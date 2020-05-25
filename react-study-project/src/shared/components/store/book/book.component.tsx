@@ -3,10 +3,24 @@ import "./book.component.scss"
 import {IBookGetAllBookResponseViewItem, IAuthorBookGetAllBookResponseViewItem } from "../../../interfaces/responses/book/get-all-book-response.view";
 import { BookType } from "../../../enums/book-type.enum";
 import { BookConstants } from "../../../constants/book.constants";
+import { ShoppingCartService } from "../../../services/shopping-cart.service";
+import { useDispatch } from "react-redux";
+import { IShoppingCartView } from "../../../interfaces/book/shopping-cart.view";
+import { ShoppingActionConstant } from "../../../actions/constants/shopping-action.constant";
+
+const shoppingCartService = new ShoppingCartService();
 
 const BookComponent: React.FC<IBookGetAllBookResponseViewItem> = (book:IBookGetAllBookResponseViewItem) => {
+    const dispatch = useDispatch();
     const getBookType = (bookType: BookType): string => {
         return BookType[bookType];
+    };
+    const setBookToCart = (book:IBookGetAllBookResponseViewItem): void => {
+        const shopingCart:IShoppingCartView = shoppingCartService.setToCart(book);
+        dispatch({
+            type:ShoppingActionConstant.SHOPPING_ACTION_CART_SET,
+            payload: shopingCart 
+        });
     };
     return (
         <div className="card-book">
@@ -22,7 +36,7 @@ const BookComponent: React.FC<IBookGetAllBookResponseViewItem> = (book:IBookGetA
                 }
                 <p className="card-text">{getBookType(book.type)}</p>
                 <p className="card-text">{book.price} $</p>
-                <button className="btn btn-outline-success">Add to shoping cart</button>
+                <button onClick={()=>setBookToCart(book)} className="btn btn-outline-success">Add</button>
             </div>
         </div>
 

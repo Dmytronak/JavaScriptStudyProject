@@ -1,0 +1,4 @@
+export const ShoppingActionConstant = {
+    SHOPPING_ACTION_CART_SET: '@@BOOK/SHOPPING_CART_SET',
+    SHOPPING_ACTION_CART_CLEAR: '@@BOOK/SHOPPING_CART_CLEAR',
+}

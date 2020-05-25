@@ -14,8 +14,8 @@ const RangeWithTooltip = createSliderWithTooltip(Range);
 
 const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
     const [priceRange, setPriceRange] = React.useState<any>({
-        min: 0,
-        max: 100
+        min: SharedConstants.ZERO_VALUE,
+        max: SharedConstants.ONE_HUNDRED
     });
     let [priceRangeMarksValue, setPriceRangeMarksValue] = React.useState<any>({
         0: <strong>0$</strong>,
@@ -38,23 +38,24 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
             .then((response: IFilteredBookResponseView) => {
                 outputFilteredBooks(response);
                 const priceRange = {
-                    min:response.minPrice,
-                    max:response.maxPrice
+                    min: response.minPrice,
+                    max: response.maxPrice
                 };
                 const priceRangeMarks = {
-                    min:<strong>{response.minPrice}$</strong>,
-                    max:<strong>{response.maxPrice}$</strong>
+                    min: <strong>{response.minPrice}$</strong>,
+                    max: <strong>{response.maxPrice}$</strong>
                 }
-                const priceRangeMarksReplace = Object.keys(priceRangeMarks).map((key)=>{
-                    if(key ==='min'){
-                        const newKey = response.minPrice || key;
-                        return { [newKey] : priceRangeMarks[key] }; 
-                    }
-                    if(key ==='max'){
-                        const newKey = response.maxPrice || key;
-                        return { [newKey] : priceRangeMarks[key] }; 
-                    }
-                });
+                const priceRangeMarksReplace = Object.keys(priceRangeMarks)
+                    .map((key) => {
+                        if (key === 'min') {
+                            const newKey = response.minPrice || key;
+                            return { [newKey]: priceRangeMarks[key] };
+                        }
+                        if (key === 'max') {
+                            const newKey = response.maxPrice || key;
+                            return { [newKey]: priceRangeMarks[key] };
+                        }
+                    });
                 const priceRangeMarksReplaced = priceRangeMarksReplace.reduce((a, b) => Object.assign({}, a, b));
                 setPriceRange(priceRange);
                 setPriceRangeMarksValue(priceRangeMarksReplaced);
@@ -72,14 +73,14 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
     const searchBooksByPriceRange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         getBookData(criterias);
     }
-    const searchBooksBytType = (event:React.ChangeEvent<HTMLSelectElement>)=>{
+    const searchBooksBytType = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = parseInt(event.currentTarget.value);
         criterias.type = value;
         getBookData(criterias);
     }
     const bookTypes = EnumToArrayHelper(BookType);
-    const getTypeName = (number:number):string =>{
-        if(number === BookType.None){
+    const getTypeName = (number: number): string => {
+        if (number === BookType.None) {
             return SharedConstants.ENUM_NONE_ALL_NAME;
         }
         return BookType[number];
@@ -96,10 +97,10 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
                 <p>Price range</p>
                 <RangeWithTooltip
                     allowCross={false}
-                    min={priceRange.min} 
+                    min={priceRange.min}
                     max={priceRange.max}
                     marks={priceRangeMarksValue}
-                    defaultValue={[priceRange.min,priceRange.max]}
+                    defaultValue={[priceRange.min, priceRange.max]}
                     onChange={priceRangeChange}
                     tipFormatter={(value: {}) => `${value}$`}
                 />
@@ -108,11 +109,11 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
             <div className="filter-type">
                 <p>Book type</p>
                 <select onChange={searchBooksBytType}>
-                {
-                    bookTypes.map(x=>{
-                        return <option value={x} key={x}>{getTypeName(x)}</option>
-                    })
-                }
+                    {
+                        bookTypes.map(x => {
+                            return <option value={x} key={x}>{getTypeName(x)}</option>
+                        })
+                    }
                 </select>
             </div>
         </div>

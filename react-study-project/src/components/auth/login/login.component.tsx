@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { ILoginAuthView } from '../../../shared/interfaces/auth/login-auth.view';
 import { Link } from 'react-router-dom';
 import { SharedConstants } from '../../../shared/constants/shared.constant';
+import { AuthActionConstants } from '../../../shared/actions/constants/auth-action.constant';
 
 export class LoginComponent extends React.Component<any, any> {
     constructor(props: any) {
@@ -72,10 +73,9 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = (dispath: any) => ({
     login: (loginData: ILoginAuthView) => {
         dispath({
-            type: `@@AUTH/LOGIN`,
+            type: AuthActionConstants.AUTH_ACTION_LOGIN_MAIN,
             loginData: loginData
         })
     }
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(LoginComponent)

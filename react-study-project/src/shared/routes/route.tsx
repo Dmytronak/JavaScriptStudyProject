@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/header/header.component";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, Router } from "react-router-dom";
 import HomeComponent from "../../components/home/home.component";
 import LoginComponent from "../../components/auth/login/login.component";
 import RegisterComponent from "../../components/auth/register/register.component";
@@ -11,9 +11,11 @@ import OnlyLoggedOutPrivateRoute from "../guards/only-logged-out-private-route.g
 import OnlyLoggedInPrivateRoute from "../guards/only-logged-in-private-route.guard";
 import OnlyAdminPrivateRoute from "../guards/only-admin-private-route.guard";
 import BooksComponent from "../../components/store/books/books.component";
-const Routes: React.FC = () => {
+import ShopingCartComponent from "../../components/store/shoping-cart/shoping-cart.component";
+
+const Routes: React.FC<any> = (props:any) => {
   return (
-    <main>
+    <Router history={props.history}>
       <Header />
       <Switch>
         <Route path='/' component={()=><Redirect to='/books' />} exact />
@@ -21,11 +23,13 @@ const Routes: React.FC = () => {
         <OnlyLoggedOutPrivateRoute path='/auth/register' component={RegisterComponent} />
         <OnlyLoggedOutPrivateRoute path='/home' exact={true} component={HomeComponent} />
         <OnlyLoggedInPrivateRoute path='/books' exact={true} component={BooksComponent} />
+        <OnlyLoggedInPrivateRoute path='/shoppingCart' exact={true} component={ShopingCartComponent} />
         <OnlyAdminPrivateRoute path='/admin' exact={true} component={AdminMainComponent} />
         <OnlyAdminPrivateRoute path='/admin/user' exact={true} component={AdminUserComponent} />
         <OnlyAdminPrivateRoute path='/admin/books' exact={true} component={AdminBookComponent} />
       </Switch>
-    </main>
+    </Router>
+    
   );
 }
 

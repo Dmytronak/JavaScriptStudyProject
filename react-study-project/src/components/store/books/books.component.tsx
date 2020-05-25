@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./books.component.scss"
 import { BookService } from "../../../shared/services/book.service";
 import { SharedConstants } from "../../../shared/constants/shared.constant";
@@ -38,8 +38,6 @@ const BooksComponent: React.FC = () => {
 
     });
 
-
-
     const BookList = (): JSX.Element => {
         const listItems: JSX.Element[] = store.books
             .map((book: IBookGetAllBookResponseViewItem) => {
@@ -77,7 +75,7 @@ const BooksComponent: React.FC = () => {
                             totalItemsCount={store.collectionSize}
                             onChange={(page) => handlePageChange(page)}
                             itemClass="page-item"
-                            linkClass="page-link" /> : ''
+                            linkClass="page-link" /> : SharedConstants.EMPTY_VALUE
                     }
 
                 </div>

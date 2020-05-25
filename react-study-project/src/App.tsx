@@ -1,9 +1,9 @@
 import React from 'react';
 import Routes from './shared/routes/route';
 import './App.scss'
-const App: React.FC = () => {
+const App: React.FC<any> = (props:any) => {
   return (
-      <Routes/>
+      <Routes history={props.history}/>
   );
 }
 

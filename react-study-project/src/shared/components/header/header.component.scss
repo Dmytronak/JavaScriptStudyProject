@@ -20,7 +20,7 @@ nav {
             transform: rotate(360deg);
         }
     }
-    h1{
+    h2{
         a {
             color: rgb(68, 68, 68);
         }
@@ -32,3 +32,36 @@ nav {
     }  
         
 }
+li.nav-item{
+  a{
+    color: rgb(68, 68, 68);
+    border-color: rgb(68, 68, 68);
+  }
+  .btn-outline-primary:hover{
+    background-color: rgb(68, 68, 68);
+    border-color: rgb(68, 68, 68); 
+    color: white
+  }
+  .btn-outline-primary:active {
+    background-color: rgb(68, 68, 68) !important;
+    border-color: rgb(68, 68, 68)!important; 
+}
+}
+li.nav-item-shopping-cart {
+    .cart{
+        width: 44px;
+        height: 45px;
+        position: relative;
+        margin-top: 7px;
+        cursor: pointer;
+    }
+   
+}
+span.badge-secondary-notification{
+    color: #fff;
+    background-color: #6c757d;
+    position: absolute;
+    margin-top: -10px;
+} 
+
+

@@ -129,7 +129,7 @@ export class BookService {
             }
         }
         if(requestFilterBookView.type !==BookType.None){
-            let query= searchModel['$and'];
+            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
             if(!query){
                 searchModel = {
                     $and: [typeSearch]
@@ -143,7 +143,7 @@ export class BookService {
             }
         }
         if(requestFilterBookView.priceMin!==SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !==SharedConstants.ZERO_VALUE){
-            let query= searchModel['$and'];
+            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
             if(!query){
                 searchModel = {
                     $and: [priceSearch]
@@ -272,7 +272,7 @@ export class BookService {
             }
         }
         if(requestFilterBookView.type !==BookType.None){
-            let query= searchModel['$and'];
+            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
             if(!query){
                 searchModel = {
                     $and: [typeSearch]
@@ -286,7 +286,7 @@ export class BookService {
             }
         }
         if(requestFilterBookView.priceMin!==SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !==SharedConstants.ZERO_VALUE){
-            let query= searchModel['$and'];
+            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
             if(!query){
                 searchModel = {
                     $and: [priceSearch]

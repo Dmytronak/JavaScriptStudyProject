@@ -17,7 +17,6 @@ const OnlyAdminPrivateRoute = (props: ProtectedRouteProps) => {
             isAdmin = true;
         }
     });
-    history.push(`${props.location?.pathname}`);
     return (
         <Route
             {...rest}
