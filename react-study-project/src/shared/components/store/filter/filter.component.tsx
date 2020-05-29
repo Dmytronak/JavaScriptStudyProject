@@ -91,7 +91,7 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
                 <p>
                     Search
                 </p>
-                <input type="text" onChange={searchBookByNames} placeholder="Write book title or authors" />
+                <input type="text" className="form-control" onChange={searchBookByNames} placeholder="Write book title or authors" />
             </div>
             <div className="filter-range">
                 <p>Price range</p>
@@ -108,7 +108,7 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
             <button className="btn btn-outline-success" onClick={searchBooksByPriceRange}>Ok</button>
             <div className="filter-type">
                 <p>Book type</p>
-                <select onChange={searchBooksBytType}>
+                <select className="form-control" onChange={searchBooksBytType}>
                     {
                         bookTypes.map(x => {
                             return <option value={x} key={x}>{getTypeName(x)}</option>

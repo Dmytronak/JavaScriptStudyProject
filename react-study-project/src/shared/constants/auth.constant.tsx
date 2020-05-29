@@ -1,5 +1,7 @@
 export const AuthConstants = {
     AUTH_TOKEN_KEY:'token',
+    AUTH_ROLE_ADMIN:'admin',
+    AUTH_ROLE_ROLES_KEY:'roles',
     EMPTY_VALUE:'',
     EMPTY_PAST_VALUE:' ',
     ZERO_VALUE:0,

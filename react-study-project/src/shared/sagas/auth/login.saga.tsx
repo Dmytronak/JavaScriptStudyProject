@@ -8,6 +8,7 @@ const authService = new AuthService();
 export function* LoginSaga(): IterableIterator<{}> {
     yield takeEvery(AuthActionConstants.AUTH_ACTION_LOGIN_MAIN, function* (action: any) {
         const response: IResponseLoginAuthView = yield call(authService.login, action.loginData);
+        debugger
         if(response.errorMessage || response.errorStatusCode){
             yield put({
                 type: AuthActionConstants.AUTH_ACTION_LOGIN_ERROR,

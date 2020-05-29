@@ -18,19 +18,19 @@ export class AuthService {
                 window.location.href = '/auth/login';
             })
             .catch(error => {
-                toastMessagesSerivce.error(error.response.data.message);
+                toastMessagesSerivce.error(error.data.message);
             });
     }
 
     public async login(login: ILoginAuthView): Promise<IResponseLoginAuthView> {
         let result: IResponseLoginAuthView = { access_token: SharedConstants.EMPTY_VALUE, errorMessage: SharedConstants.EMPTY_VALUE, errorStatusCode: SharedConstants.ZERO_VALUE };
         await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/login`, login)
-            .then(response => {
-                result = response.data
+            .then((response:any) => {
+                result = response
             })
             .catch(error => {
-                result.errorMessage = error.response.data.message;
-                result.errorStatusCode = error.response.data.statusCode;
+                result.errorMessage = error.data.message;
+                result.errorStatusCode = error.data.statusCode;
             });
         return result;
     }

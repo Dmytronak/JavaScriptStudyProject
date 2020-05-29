@@ -12,7 +12,7 @@ export const JwtInterceptor = () => {
     axios.interceptors.request.use(function (config:AxiosRequestConfig) {
         const token: string = localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`
+            config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     }, 
@@ -20,15 +20,19 @@ export const JwtInterceptor = () => {
         return Promise.reject(error);
     });
 
-    axios.interceptors.response.use(function (response:AxiosResponse<any>) {
-        if (response.status === AuthConstants.ERROR_CODE_UNAUTHORIZE) {
+    axios.interceptors.response.use(function (response: AxiosResponse<any>) {
+        return response.data;
+    }, 
+    function (error) {
+        if(!error.response){
+            toastMessagesSerivce.error(error.message);
+            return Promise.reject(error);  
+        }
+        if (error.response.status === AuthConstants.ERROR_CODE_UNAUTHORIZE) {
             authService.signOut();
             toastMessagesSerivce.error(AuthConstants.ERROR_MESSAGE_UNAUTHORIZE);
         }
-        return response;
-    }, 
-    function (error) {
-        return Promise.reject(error);
+        return Promise.reject(error.response);
     });
 };
 

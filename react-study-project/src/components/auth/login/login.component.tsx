@@ -1,5 +1,5 @@
-import React from 'react'
-import '../login/login.component.scss'
+import React from 'react';
+import '../login/login.component.scss';
 import { connect } from 'react-redux';
 import { ILoginAuthView } from '../../../shared/interfaces/auth/login-auth.view';
 import { Link } from 'react-router-dom';

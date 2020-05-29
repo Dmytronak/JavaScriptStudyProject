@@ -1,5 +1,4 @@
 import { ToastMessagesSerivce } from '../../services/toast-messages.service';
-import { history } from '../../configurations/browser-history.config';
 import { LocalStorageService } from "../../services/local-storage.service";
 import { AuthConstants } from '../../constants/auth.constant';
 import { AuthActionConstants } from '../../actions/constants/auth-action.constant';
@@ -26,7 +25,6 @@ export const LoginReducer = (state: any, action: any) => {
             
         case AuthActionConstants.AUTH_ACTION_LOGIN_SUCCESS: 
             { 
-                history.push(AuthConstants.PAGE_BOOKS_HOME);
                 return window.location.reload();
             }     
         default:
