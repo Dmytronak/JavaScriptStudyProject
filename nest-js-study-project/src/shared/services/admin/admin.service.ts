@@ -24,6 +24,11 @@ import { PayloadAuthView } from 'src/shared/view-models/auth/payload.auth.view';
 import { ResponseLoginAuthView } from 'src/shared/view-models/auth/response-login-auth.view';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAsUserAdminView } from 'src/shared/view-models/admin/user/login-as-user.admin';
+import { RequestFilterAdminView } from 'src/shared/view-models/admin/filter/request-filter-admin.view';
+import { SharedConstants } from 'src/shared/constants/shared.constants';
+import { PaginationModel } from 'src/shared/models/pagination.model';
+import { GetFilteredBooksAdminView } from 'src/shared/view-models/admin/book/get-filtered-books.admin.view'
+import { GetFilteredUsersAdminView, UserGetFilteredUsersAdminViewItem } from 'src/shared/view-models/admin/user/get-filtered-users.admin.view';
 
 @Injectable()
 export class AdminService {
@@ -32,7 +37,7 @@ export class AdminService {
         @Inject('USER_REPOSITORY') private readonly userRepository: Repository<User>,
         @Inject('AUTHOR_REPOSITORY') private readonly authorRepository: Repository<Author>,
         @Inject('BOOK_REPOSITORY') private readonly bookRepository: Repository<Book>,
-        private readonly jwtService: JwtService) { }
+        private readonly jwtService: JwtService,  private paginationModel: PaginationModel) { }
 
     //#region Author
 
@@ -139,7 +144,7 @@ export class AdminService {
 
     //#region Book
 
-    public async createBook(createBookAdminView: CreateBookAdminView): Promise<void> {
+    public async createBook(createBookAdminView: CreateBookAdminView): Promise<string> {
         const ObjectID = require('mongodb').ObjectID
         const isExistBook: Book = await this.bookRepository
             .findOne({
@@ -165,6 +170,9 @@ export class AdminService {
         book.price = createBookAdminView.price;
         book.authors = authors;
         await this.bookRepository.save(book);
+
+        const response:string = book._id.toHexString();
+        return response;
     }
 
     public async getAllBooks(): Promise<GetAllBooksAdminView> {
@@ -193,6 +201,63 @@ export class AdminService {
                     response.allBooks.push(book);
                 })
             });
+        return response;
+    }
+    public async getFilteredBooks(requestFilterAdminView:RequestFilterAdminView): Promise<GetFilteredBooksAdminView> {
+        const response: GetFilteredBooksAdminView = new GetFilteredBooksAdminView();
+        requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
+        const offset:number = (requestFilterAdminView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
+        const titleSearch = {
+            title: {
+                $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
+            }
+        };
+
+        const authorSearch = {
+            authors: {
+                $elemMatch: {
+                    fullName: {
+                        $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
+                    }
+                }
+            }
+        };
+        let searchModel = {};
+
+        if (requestFilterAdminView.searchString !== null) {
+            searchModel = {
+                $and: [{ $or: [titleSearch, authorSearch] }],
+            }
+        }
+        await this.bookRepository
+            .find({
+                where: searchModel,
+                skip: offset,
+                take: this.paginationModel.maxSize
+            })
+            .then(result => {
+                result.map(x => {
+                    const book: BookGetAllBooksAdminViewItem = { 
+                        id: x._id.toString(), 
+                        title: x.title,
+                        type:x.type, 
+                        price: x.price, 
+                        authors: [] 
+                    }
+                    book.authors = x.authors.map(x => {
+                        const authors: AuthorBookGetAllBooksAdminViewItem = { 
+                            id: x._id.toString(), 
+                            firstName: x.firstName, 
+                            lastName: x.lastName, 
+                            fullName: x.fullName 
+                        }
+                        return authors;
+                    });
+
+                    response.books.push(book);
+                })
+            });
+            response.quantity = await this.getFilteredBooksCount(requestFilterAdminView);
         return response;
     }
 
@@ -225,6 +290,39 @@ export class AdminService {
         await this.bookRepository.delete(id);
     }
 
+    private async getFilteredBooksCount(requestFilterAdminView:RequestFilterAdminView): Promise<number>{
+        requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
+        const titleSearch = {
+            title: {
+                $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
+            }
+        };
+
+        const authorSearch = {
+            authors: {
+                $elemMatch: {
+                    fullName: {
+                        $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
+                    }
+                }
+            }
+        };
+        let searchModel = {};
+
+        if (requestFilterAdminView.searchString !== null) {
+            searchModel = {
+                $and: [{ $or: [titleSearch, authorSearch] }],
+            }
+        }
+        const response:number = await this.bookRepository
+            .findAndCount({
+                where: searchModel
+            })
+            .then((response:[Book[], number]) => {
+                return response[1]
+            });
+        return response;    
+    }
 
     //#endregion Book
 
@@ -350,6 +448,63 @@ export class AdminService {
 
         return response;
     }
+    public async getFilteredUsers(requestFilterAdminView:RequestFilterAdminView): Promise<GetFilteredUsersAdminView> {
+        const response: GetFilteredUsersAdminView = new GetFilteredUsersAdminView();
+        requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
+        const offset:number = (requestFilterAdminView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
+        const fullNameSearch = {
+            email: {
+                $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
+            }
+        };
+        let searchModel = {};
 
+        if (requestFilterAdminView.searchString !== null) {
+            searchModel = fullNameSearch;
+        }
+        await this.userRepository
+            .find({
+                where: searchModel,
+                skip: offset,
+                take: this.paginationModel.maxSize
+            })
+            .then((result:User[]) => {
+                response.users = result.map(x=>{
+                    const user:UserGetFilteredUsersAdminViewItem = {
+                        id:x._id.toHexString(),
+                        email:x.email,
+                        firstName:x.firstName,
+                        lastName:x.lastName,
+                        fullName:x.fullName,
+                        age:x.age                        
+                    }
+                    return user;
+                })
+            });
+            response.quantity = await this.getFilteredUsersCount(requestFilterAdminView);
+        return response;
+    }
+
+    private async getFilteredUsersCount(requestFilterAdminView:RequestFilterAdminView): Promise<number>{
+        requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
+        const emailSearch = {
+            email: {
+                $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
+            }
+        };
+        let searchModel = {};
+
+        if (requestFilterAdminView.searchString !== null) {
+            searchModel = emailSearch;
+        }
+        const response:number = await this.userRepository
+            .findAndCount({
+                where: searchModel,
+            })
+            .then((result:[User[],number]) => {
+                return result[1];
+            });
+            return response;    
+    }
     //#endregion User
 }

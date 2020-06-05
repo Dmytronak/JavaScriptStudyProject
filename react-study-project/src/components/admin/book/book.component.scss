@@ -5,6 +5,47 @@
     flex-direction: column;
     justify-content: space-between;
 }
+.admin-book-header{
+    display: inline-flex;
+    justify-content: center;
+    margin: 10px auto;
+
+}
+.admin-book-header-search{
+    margin-left: 10px;
+    margin-right: 10px;
+}
 .admin-book-table{
     overflow-x: auto;
+}
+.admin-book-table-authors{
+    display: grid;
+}
+.admin-book-add-footer{
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px auto;
+}
+.admin-book-table-pagination{
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+ 
+}
+.page-link{
+    color: #343a40 !important;
+    
+}
+.page-link:focus{
+    z-index: 3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1) !important;
+}
+.page-item.active .page-link{
+    color: #fff !important;
+    background-color: #343a40 !important;
+    border-color: #454d55 !important;
+}
+.admin-book-header-search-input{
+    display: inline-flex;
 }

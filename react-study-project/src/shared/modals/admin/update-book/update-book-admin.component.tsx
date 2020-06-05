@@ -1,4 +1,4 @@
-import React, { useEffect, SyntheticEvent } from 'react';
+import React, { useEffect } from 'react';
 import { IBookIGetAllBooksAdminViewItem, IAuthorBookIGetAllBooksAdminViewItem } from '../../../interfaces/admin/book/get-all-books.admin.view';
 import { SharedConstants } from '../../../constants/shared.constant';
 import { BookType } from '../../../enums/book-type.enum';
@@ -8,12 +8,12 @@ import { AdminService } from '../../../services/admin/admin.service';
 import { IGetAllAuthorsAdminView, IAuthorIGetAllAuthorsAdminViewItem } from '../../../interfaces/admin/author/get-all-authors.admin.view';
 import { IUpdateBookAdminView, IAuthorIUpdateBookAdminViewItem } from '../../../interfaces/admin/book/update-book.admin.view';
 import { ToastMessagesSerivce } from '../../../services/toast-messages.service';
+import { AdminConstants } from '../../../constants/admin.constant';
 
 const adminService = new AdminService();
 const toastMessagesSerivce = new ToastMessagesSerivce();
 
-const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook }) => {
-  const [showModalState, setShowModalState] = React.useState<boolean>(false);
+const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook, inputBookPageState, outputBookPageState,outputUpdatedBook }) => {
   const [updatingBook, setUpdatingBook] = React.useState<IBookIGetAllBooksAdminViewItem>({
     id: SharedConstants.EMPTY_VALUE,
     title: SharedConstants.EMPTY_VALUE,
@@ -26,23 +26,19 @@ const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook }) => {
   });
   const bookTypes = EnumToArrayHelper(BookType);
   useEffect(() => {
-    showModal();
     setUpdatingBook(inputUpdatedBook);
-  }, [inputUpdatedBook]);
-
-  const showModal = (): void => {
-    if (inputUpdatedBook.id) {
-      setShowModalState(true);
-    }
     adminService.getAllAuthors()
     .then((response: IGetAllAuthorsAdminView) => {
       setAuthors(response);
-    })
-  };
+    });
+  }, [inputUpdatedBook]);
+
   const hideModal = (): void => {
-    setShowModalState(false);
+    outputBookPageState(false)
   }
   const handleSubmitForm = (event: React.SyntheticEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+
     const updateBook: IUpdateBookAdminView = {
       id: updatingBook.id,
       title: updatingBook.title,
@@ -57,9 +53,12 @@ const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook }) => {
     }
     adminService.updateBook(updateBook)
     .then((response)=>{
-      toastMessagesSerivce.success('Success')
+      outputUpdatedBook(updateBook);
+      outputBookPageState(false);
+      toastMessagesSerivce.success(AdminConstants.UPDATE_BOOK_SUCCESSFULLY);
     }) 
   };
+  
   const handleChangesInput = (event: React.SyntheticEvent<any>): void => {
     const fieldName = event.currentTarget.name;
     const fieldValue = event.currentTarget.value;
@@ -76,7 +75,7 @@ const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook }) => {
     if (type === BookConstants.BOOK_SELECT_MULTIPLE_TYPE) {
       const selectedOptions = event.currentTarget.selectedOptions;
       const authorsOfBook: IAuthorBookIGetAllBooksAdminViewItem[] = [];
-      for (let index = 0; index < selectedOptions.length; index++) {
+      for (let index = SharedConstants.ZERO_VALUE; index < selectedOptions.length; index++) {
         const authorId = selectedOptions[index].value;
         const author: IAuthorIGetAllAuthorsAdminViewItem = authors.allAuthors.find(x => x.id === authorId)!;
         authorsOfBook.push(author);
@@ -92,11 +91,11 @@ const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook }) => {
       ...updatingBook,
       [fieldName]: fieldValue
     });
-  }
+  };
 
 
   return (
-    <div className="modal fade show" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="staticBackdropLabel" style={{ display: showModalState ? 'inline' : 'none', paddingRight: '0px' }} aria-hidden="true">
+    <div className="modal fade show" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="staticBackdropLabel" style={{ display: inputBookPageState.openEditModal ? 'inline' : 'none', paddingRight: '0px' }} aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div className="modal-content">
           <div className="modal-header">
@@ -118,7 +117,6 @@ const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook }) => {
                     bookTypes.map((type: number) => {
                       return <option value={type} key={type}>{BookType[type]}</option>
                     })
-
                   }
                 </select>
               </div>

@@ -1,6 +1,6 @@
 import { BookType } from "../../enums/book-type.enum";
 
-export interface FilterBookView {
+export interface FilterCriteriasBookView {
     searchString: string;
     priceMin: number;
     priceMax: number;

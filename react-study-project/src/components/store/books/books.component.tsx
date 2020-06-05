@@ -6,14 +6,14 @@ import { BookType } from "../../../shared/enums/book-type.enum";
 import BookComponent from "../../../shared/components/store/book/book.component";
 import Pagination from "react-js-pagination";
 import { IBookGetAllBookResponseViewItem } from "../../../shared/interfaces/responses/book/get-all-book-response.view";
-import { FilterBookView } from "../../../shared/interfaces/book/filter-book.view";
+import { FilterCriteriasBookView } from "../../../shared/interfaces/book/filter-criterias-book.view";
 import { PaginationCongfig } from "../../../shared/configurations/pagination.config";
 import FilterComponent from "../../../shared/components/store/filter/filter.component";
 import { IFilteredBookResponseView } from "../../../shared/interfaces/responses/book/filtered-book-response.view";
 
 const bookService: BookService = new BookService();
 const BooksComponent: React.FC = () => {
-    const [criterias, setCriterias] = React.useState<FilterBookView>({
+    const [criterias, setCriterias] = React.useState<FilterCriteriasBookView>({
         page: PaginationCongfig.pageNumber,
         priceMin: SharedConstants.ZERO_VALUE,
         priceMax: SharedConstants.ZERO_VALUE,

@@ -64,4 +64,9 @@ span.badge-secondary-notification{
     margin-top: -10px;
 } 
 
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color:  #343a40 !important;
+}
 

@@ -7,7 +7,8 @@ export const BookConstants = {
     MINUS_ONE_VALUE:-1,
 
     BOOK_SELECT_ONE_TYPE:'select-one',
-    BOOK_SELECT_MULTIPLE_TYPE:'select-multiple'
+    BOOK_SELECT_MULTIPLE_TYPE:'select-multiple',
+
 
 
 }

@@ -19,6 +19,9 @@ import { ResetPasswordAdminView } from 'src/shared/view-models/admin/user/reset-
 import { ResponseLoginAuthView } from 'src/shared/view-models/auth/response-login-auth.view';
 import { LoginAsUserAdminView } from 'src/shared/view-models/admin/user/login-as-user.admin';
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { RequestFilterAdminView } from 'src/shared/view-models/admin/filter/request-filter-admin.view';
+import { GetFilteredBooksAdminView } from 'src/shared/view-models/admin/book/get-filtered-books.admin.view';
+import { GetFilteredUsersAdminView } from 'src/shared/view-models/admin/user/get-filtered-users.admin.view';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('admin')
@@ -68,14 +71,20 @@ export class AdminController {
     async resetPasswordUser(@Body() resetPasswordAdminView: ResetPasswordAdminView): Promise<void> {
         await this.adminService.resetPasswordUser(resetPasswordAdminView);
     }
+    @SetMetadata('roles', ['admin'])
+    @Post('/filteredUsers')
+    async filteredUsers(@Body()requestFilterAdminView:RequestFilterAdminView): Promise<GetFilteredUsersAdminView> {
+        const response = await this.adminService.getFilteredUsers(requestFilterAdminView);
+        return response;
+    }
     //#endregion User
 
     //#region Book
 
     @SetMetadata('roles', ['admin'])
     @Post('/createBook')
-    async createBook(@Body() createBookAdminView: CreateBookAdminView): Promise<void> {
-        await this.adminService.createBook(createBookAdminView);
+    async createBook(@Body() createBookAdminView: CreateBookAdminView): Promise<string> {
+        return await this.adminService.createBook(createBookAdminView);
     }
 
     @SetMetadata('roles', ['admin'])
@@ -89,7 +98,6 @@ export class AdminController {
     async updateBook(@Body() updateBookAdminView: UpdateBookAdminView): Promise<void> {
         await this.adminService.updateBook(updateBookAdminView);
     }
-
     @ApiParam({
         name:'id',
         type:'string'
@@ -99,6 +107,11 @@ export class AdminController {
     async deleteBook(@Param() params): Promise<void> {
         await this.adminService.deleteBook(params.id);
     }
+    @Post('/filteredBooks')
+    async filteredBooks(@Body()requestFilterAdminView:RequestFilterAdminView): Promise<GetFilteredBooksAdminView> {
+        return await this.adminService.getFilteredBooks(requestFilterAdminView);
+    }
+
     //#endregion Book
 
     //#region Author

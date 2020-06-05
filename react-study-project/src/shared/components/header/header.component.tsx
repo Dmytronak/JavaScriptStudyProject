@@ -111,7 +111,7 @@ const HeaderComponent: React.FC<any> = () => {
                                 </li>
                             </ul>
                             :
-                            <ul className="nav justify-content-end">
+                            <ul className="nav navbar-nav ml-auto">
                                 <li className="nav-item">
                                     <Link className="btn btn-outline-primary" to="/auth/login">Sign In</Link>
                                 </li>

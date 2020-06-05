@@ -116,47 +116,47 @@ export class BookService {
         const priceSearch = {
             price: {
                 $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
-            }    
+            }
         };
         const typeSearch = {
             type: requestFilterBookView.type
         }
         let searchModel = {};
 
-        if(requestFilterBookView.searchString !==null){
-            searchModel = { 
-                $and: [{ $or:[titleSearch,authorSearch]}],
+        if (requestFilterBookView.searchString !== null) {
+            searchModel = {
+                $and: [{ $or: [titleSearch, authorSearch] }],
             }
         }
-        if(requestFilterBookView.type !==BookType.None){
-            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
-            if(!query){
+        if (requestFilterBookView.type !== BookType.None) {
+            let query = searchModel[SharedConstants.MONGO_AND_QUERRY];
+            if (!query) {
                 searchModel = {
                     $and: [typeSearch]
                 };
             }
-            if(query){
+            if (query) {
                 query.push(typeSearch);
                 searchModel = {
                     $and: query
                 };
             }
         }
-        if(requestFilterBookView.priceMin!==SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !==SharedConstants.ZERO_VALUE){
-            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
-            if(!query){
+        if (requestFilterBookView.priceMin !== SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !== SharedConstants.ZERO_VALUE) {
+            let query = searchModel[SharedConstants.MONGO_AND_QUERRY];
+            if (!query) {
                 searchModel = {
                     $and: [priceSearch]
                 };
             }
-            if(query){
+            if (query) {
                 query.push(priceSearch);
                 searchModel = {
                     $and: query
                 };
             }
         }
-        
+
         await this.bookRepository
             .find({
                 where: searchModel,
@@ -183,7 +183,7 @@ export class BookService {
                 })
             });
         response.collectionSize = (await this.getFilteredBookCount(requestFilterBookView))
-        const range:GetPriceRangeBookView = (await this.getPriceRange());
+        const range: GetPriceRangeBookView = (await this.getPriceRange());
         response.minPrice = range.minPrice
         response.maxPrice = range.maxPrice;
         return response;
@@ -259,51 +259,51 @@ export class BookService {
         const priceSearch = {
             price: {
                 $gte: requestFilterBookView.priceMin, $lte: requestFilterBookView.priceMax
-            }    
+            }
         };
         const typeSearch = {
             type: requestFilterBookView.type
         }
         let searchModel = {};
-        
-        if(requestFilterBookView.searchString !==null){
-            searchModel = { 
-                $and: [{ $or:[titleSearch,authorSearch]}],
+
+        if (requestFilterBookView.searchString !== null) {
+            searchModel = {
+                $and: [{ $or: [titleSearch, authorSearch] }],
             }
         }
-        if(requestFilterBookView.type !==BookType.None){
-            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
-            if(!query){
+        if (requestFilterBookView.type !== BookType.None) {
+            let query = searchModel[SharedConstants.MONGO_AND_QUERRY];
+            if (!query) {
                 searchModel = {
                     $and: [typeSearch]
                 };
             }
-            if(query){
+            if (query) {
                 query.push(typeSearch);
                 searchModel = {
                     $and: query
                 };
             }
         }
-        if(requestFilterBookView.priceMin!==SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !==SharedConstants.ZERO_VALUE){
-            let query= searchModel[SharedConstants.MONGO_AND_QUERRY];
-            if(!query){
+        if (requestFilterBookView.priceMin !== SharedConstants.ZERO_VALUE && requestFilterBookView.priceMax !== SharedConstants.ZERO_VALUE) {
+            let query = searchModel[SharedConstants.MONGO_AND_QUERRY];
+            if (!query) {
                 searchModel = {
                     $and: [priceSearch]
                 };
             }
-            if(query){
+            if (query) {
                 query.push(priceSearch);
                 searchModel = {
                     $and: query
                 };
             }
         }
-        await this.bookRepository.find({
-          where: searchModel
+        await this.bookRepository.findAndCount({
+            where: searchModel
         })
-            .then(x => {
-                response = x.length;
+            .then((result:[Book[], number]) => {
+                response = result[1];
             })
         return response;
     }

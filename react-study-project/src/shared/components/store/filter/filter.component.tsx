@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, useEffect } from "react";
 import { PaginationCongfig } from "../../../configurations/pagination.config";
-import { FilterBookView } from "../../../interfaces/book/filter-book.view";
+import { FilterCriteriasBookView } from "../../../interfaces/book/filter-criterias-book.view";
 import { SharedConstants } from "../../../constants/shared.constant";
 import { BookType } from "../../../enums/book-type.enum";
 import { BookService } from "../../../services/book.service";
@@ -21,7 +21,7 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
         0: <strong>0$</strong>,
         100: <strong>100$</strong>
     });
-    const [criterias, setCriterias] = React.useState<FilterBookView>({
+    const [criterias, setCriterias] = React.useState<FilterCriteriasBookView>({
         page: PaginationCongfig.pageNumber,
         priceMin: SharedConstants.ZERO_VALUE,
         priceMax: SharedConstants.ZERO_VALUE,
@@ -33,7 +33,7 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
 
     }, []);
 
-    const getBookData = (criterias: FilterBookView) => {
+    const getBookData = (criterias: FilterCriteriasBookView) => {
         bookService.filteredBooks(criterias)
             .then((response: IFilteredBookResponseView) => {
                 outputFilteredBooks(response);
