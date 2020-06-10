@@ -19,14 +19,6 @@ export class AuthService {
         @Inject('ROLES_REPOSITORY') private readonly rolesRepository: Repository<Role>,
         private readonly jwtService: JwtService) { }
 
-    getLogin(): string {
-        return 'AUTH LOGIN!';
-    }
-
-    getRegister(): string {
-        return 'AUTH Register!';
-    }
-
     public async validate(userId: ObjectID): Promise<any> {
         const user: User = await this.userRepository.findOne(userId);
         if (user) {
@@ -58,7 +50,7 @@ export class AuthService {
         user.salt = credential.salt;
         user.age = register.age;
         user.roles = [role];
-        console.log(user)
+        
         await this.userRepository.save(user);
     }
 

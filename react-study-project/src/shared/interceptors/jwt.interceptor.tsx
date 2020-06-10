@@ -32,6 +32,9 @@ export const JwtInterceptor = () => {
             authService.signOut();
             toastMessagesSerivce.error(AuthConstants.ERROR_MESSAGE_UNAUTHORIZE);
         }
+        if (error.response.status === AuthConstants.ERROR_CODE_HANDLED_ERROR) {
+            toastMessagesSerivce.error(error.response.data.message);
+        }
         return Promise.reject(error.response);
     });
 };

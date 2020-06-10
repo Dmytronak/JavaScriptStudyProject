@@ -77,6 +77,11 @@ export class AdminController {
         const response = await this.adminService.getFilteredUsers(requestFilterAdminView);
         return response;
     }
+    @SetMetadata('roles', ['admin'])
+    @Post('/loginAsUser/')
+    async loginAsUser(@Body() loginAsUserAdminView: LoginAsUserAdminView): Promise<ResponseLoginAuthView> {
+        return await this.adminService.loginAsUser(loginAsUserAdminView);
+    }
     //#endregion User
 
     //#region Book
@@ -147,7 +152,6 @@ export class AdminController {
     //#endregion Author
 
     //#region Roles
-
     @SetMetadata('roles', ['admin'])
     @Get('/getAllRoles')
     async getAllRoles(): Promise<GetAllRolesAdminView> {
@@ -173,12 +177,6 @@ export class AdminController {
     @Get('/deleteRole/:id')
     async deleteRole(@Param() params): Promise<void> {
         await this.adminService.deleteRole(params.id);
-    }
-
-    @SetMetadata('roles', ['admin'])
-    @Post('/loginAsUser/')
-    async loginAsUser(@Body() loginAsUserAdminView: LoginAsUserAdminView): Promise<ResponseLoginAuthView> {
-        return await this.adminService.loginAsUser(loginAsUserAdminView);
     }
     //#endregion Roles
 }

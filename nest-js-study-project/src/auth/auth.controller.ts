@@ -11,20 +11,6 @@ import { ApiParam } from '@nestjs/swagger';
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
-    @Get()
-    getAuth(): string {
-        return this.authService.getLogin();
-    }
-
-    @Get('/login')
-    getLogin(): string {
-        return this.authService.getLogin();
-    }
-
-    @Get('/register')
-    getRegister(): string {
-        return this.authService.getRegister();
-    }
 
     @Get('/allUsers')
     async getAllUsers(): Promise<GetAllUsersAuthView> {
@@ -40,7 +26,6 @@ export class AuthController {
     @Post('/login')
     async login(@Body() loginAuthView: LoginAuthView): Promise<ResponseLoginAuthView> {
         const response = await this.authService.login(loginAuthView);
-        console.log(response);
         return response;
     }
     

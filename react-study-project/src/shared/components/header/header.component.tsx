@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
 import './header.component.scss';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { Link } from 'react-router-dom';
-import { AuthConstants } from '../../constants/auth.constant';
 import { SharedConstants } from '../../constants/shared.constant';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,28 +8,27 @@ import { history } from '../../configurations/browser-history.config'
 import { ShopingCartRootStateReducer, CartShopingCartReducer } from '../../interfaces/reducers/shoping-cart-root-state-reducer.view';
 import { useSelector } from 'react-redux';
 import { AuthService } from '../../services/auth.service';
+import { AuthConstants } from '../../constants/auth.constant';
 
-const localStorageService = new LocalStorageService();
 const authService = new AuthService();
 
 const HeaderComponent: React.FC<any> = () => {
     const cartState: CartShopingCartReducer = useSelector((cartState: ShopingCartRootStateReducer) => cartState.ShopingCartReducer);
     const [state, setState] = React.useState<any>({
         showUser: false,
+        isUserAdmin: false,
         adminMenuIsToggle: false,
-        expandMenu:false,
+        expandMenu: false,
         user: SharedConstants.EMPTY_VALUE
     });
 
     useEffect(() => {
-        const token = localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
-        if (token) {
-            const decode: string = JSON.stringify(jwt_decode(token));
-            const user = JSON.parse(decode);
+        if (authService.isAuth()) {
             setState({
                 ...state,
                 showUser: true,
-                user: user.email
+                isUserAdmin: authService.isAdmin(),
+                user: authService.getUserEmail()
             });
         }
     }, []);
@@ -53,7 +49,7 @@ const HeaderComponent: React.FC<any> = () => {
             adminMenuIsToggle: state.adminMenuIsToggle ? false : true,
         });
     };
-    const expandMenu = ()=>{
+    const expandMenu = () => {
         setState({
             ...state,
             expandMenu: state.expandMenu ? false : true,
@@ -79,7 +75,7 @@ const HeaderComponent: React.FC<any> = () => {
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                <div className={`collapse navbar-collapse ml-auto ${state.expandMenu ?'show':''}`}>
+                <div className={`collapse navbar-collapse ml-auto ${state.expandMenu ? 'show' : ''}`}>
                     {
                         state.showUser
                             ?
@@ -97,15 +93,16 @@ const HeaderComponent: React.FC<any> = () => {
                                 <li className="nav-item">
                                     <a className="nav-link" >{state.user}</a>
                                 </li>
-                                <li className="nav-item dropdown">
-                                    <a className="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={showAdminMenu}>
-                                        Admin
-                                        </a>
-                                    <div className={state.adminMenuIsToggle ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="navbarDropdown">
-                                        <Link className="dropdown-item" to='/admin/users'>Users</Link>
-                                        <Link className="dropdown-item" to='/admin/books'>Books</Link>
-                                    </div>
-                                </li>
+                                {
+                                    state.isUserAdmin ?
+                                        <li className="nav-item dropdown">
+                                            <a className="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={showAdminMenu}>Admin</a>
+                                            <div className={state.adminMenuIsToggle ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="navbarDropdown">
+                                                <Link className="dropdown-item" to='/admin/users'>Users</Link>
+                                                <Link className="dropdown-item" to='/admin/books'>Books</Link>
+                                            </div>
+                                        </li> : SharedConstants.EMPTY_VALUE
+                                }
                                 <li className="nav-item">
                                     <a className="btn btn-outline-primary" onClick={() => logout()}>Sign Out</a>
                                 </li>

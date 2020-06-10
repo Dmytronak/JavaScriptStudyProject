@@ -6,6 +6,9 @@ import { IResponseLoginAuthView } from '../interfaces/auth/response-login-auth.v
 import { LocalStorageService } from './local-storage.service';
 import { SharedConstants } from '../constants/shared.constant';
 import { AuthConstants } from '../constants/auth.constant';
+import jwtDecode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
+import { AdminConstants } from '../constants/admin.constant';
 
 const toastMessagesSerivce = new ToastMessagesSerivce();
 const localStorageService = new LocalStorageService();
@@ -25,7 +28,7 @@ export class AuthService {
     public async login(login: ILoginAuthView): Promise<IResponseLoginAuthView> {
         let result: IResponseLoginAuthView = { access_token: SharedConstants.EMPTY_VALUE, errorMessage: SharedConstants.EMPTY_VALUE, errorStatusCode: SharedConstants.ZERO_VALUE };
         await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/login`, login)
-            .then((response:any) => {
+            .then((response: any) => {
                 result = response
             })
             .catch(error => {
@@ -34,13 +37,44 @@ export class AuthService {
             });
         return result;
     }
-
+    public async loginAsUser(accessToken: string): Promise<void> {
+        localStorageService.setItem(AuthConstants.AUTH_TOKEN_KEY,accessToken);
+        toastMessagesSerivce.success(AdminConstants.LOGIN_AS_USER_SUCCESSFULLY)
+        setTimeout(()=>{
+            window.location.reload();
+        },7000);
+      
+    }
     public signOut(): void {
         localStorageService.removeItem(AuthConstants.AUTH_TOKEN_KEY);
         window.location.reload();
     }
     public isAuth(): boolean {
-        const result:boolean = !!localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
+        const result: boolean = !!localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
+        return result;
+    }
+    public isAdmin(): boolean {
+        let result: boolean = false;
+        const token = localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
+        if (token) {
+            const decodeToken = JSON.parse(JSON.stringify(jwtDecode(token)));
+            const userRoles: [] = decodeToken[AuthConstants.AUTH_ROLE_ROLES_KEY];
+
+            userRoles.forEach((element: string) => {
+                if (element === AuthConstants.AUTH_ROLE_ADMIN) {
+                    result = true;
+                }
+            });
+        }
+        return result;
+    }
+    public getUserEmail(): string {
+        let result: string = AuthConstants.EMPTY_VALUE;
+        const token = localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
+        if (token) {
+            const decode: string = JSON.stringify(jwt_decode(token));
+            result = JSON.parse(decode).email;
+        }
         return result;
     }
 }

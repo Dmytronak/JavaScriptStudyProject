@@ -37,7 +37,7 @@ export class AdminService {
         @Inject('USER_REPOSITORY') private readonly userRepository: Repository<User>,
         @Inject('AUTHOR_REPOSITORY') private readonly authorRepository: Repository<Author>,
         @Inject('BOOK_REPOSITORY') private readonly bookRepository: Repository<Book>,
-        private readonly jwtService: JwtService,  private paginationModel: PaginationModel) { }
+        private readonly jwtService: JwtService, private paginationModel: PaginationModel) { }
 
     //#region Author
 
@@ -67,11 +67,11 @@ export class AdminService {
             .find()
             .then(result => {
                 result.map(x => {
-                    const author: AuthorGetAllAuthorsAdminViewItem = { 
-                        id: x._id.toString(), 
-                        firstName: x.firstName, 
-                        lastName: x.lastName, 
-                        fullName: x.fullName 
+                    const author: AuthorGetAllAuthorsAdminViewItem = {
+                        id: x._id.toString(),
+                        firstName: x.firstName,
+                        lastName: x.lastName,
+                        fullName: x.fullName
                     }
                     response.allAuthors.push(author);
                 })
@@ -106,9 +106,9 @@ export class AdminService {
             .find()
             .then(result => {
                 result.map(x => {
-                    const role: RoleGetAllRolesAdminViewItem = { 
-                        id: x._id.toString(), 
-                        name: x.name 
+                    const role: RoleGetAllRolesAdminViewItem = {
+                        id: x._id.toString(),
+                        name: x.name
                     };
                     response.allRoles.push(role);
                 })
@@ -139,7 +139,7 @@ export class AdminService {
     public async deleteRole(id: string): Promise<void> {
         await this.rolesRepository.delete(id);
     }
-    
+
     //#endregion Role
 
     //#region Book
@@ -171,7 +171,7 @@ export class AdminService {
         book.authors = authors;
         await this.bookRepository.save(book);
 
-        const response:string = book._id.toHexString();
+        const response: string = book._id.toHexString();
         return response;
     }
 
@@ -181,19 +181,19 @@ export class AdminService {
             .find()
             .then(result => {
                 result.map(x => {
-                    const book: BookGetAllBooksAdminViewItem = { 
-                        id: x._id.toString(), 
+                    const book: BookGetAllBooksAdminViewItem = {
+                        id: x._id.toString(),
                         title: x.title,
-                        type:x.type, 
-                        price: x.price, 
-                        authors: [] 
+                        type: x.type,
+                        price: x.price,
+                        authors: []
                     }
                     book.authors = x.authors.map(x => {
-                        const authors: AuthorBookGetAllBooksAdminViewItem = { 
-                            id: x._id.toString(), 
-                            firstName: x.firstName, 
-                            lastName: x.lastName, 
-                            fullName: x.fullName 
+                        const authors: AuthorBookGetAllBooksAdminViewItem = {
+                            id: x._id.toString(),
+                            firstName: x.firstName,
+                            lastName: x.lastName,
+                            fullName: x.fullName
                         }
                         return authors;
                     });
@@ -203,10 +203,10 @@ export class AdminService {
             });
         return response;
     }
-    public async getFilteredBooks(requestFilterAdminView:RequestFilterAdminView): Promise<GetFilteredBooksAdminView> {
+    public async getFilteredBooks(requestFilterAdminView: RequestFilterAdminView): Promise<GetFilteredBooksAdminView> {
         const response: GetFilteredBooksAdminView = new GetFilteredBooksAdminView();
         requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
-        const offset:number = (requestFilterAdminView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
+        const offset: number = (requestFilterAdminView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
         const titleSearch = {
             title: {
                 $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
@@ -237,19 +237,19 @@ export class AdminService {
             })
             .then(result => {
                 result.map(x => {
-                    const book: BookGetAllBooksAdminViewItem = { 
-                        id: x._id.toString(), 
+                    const book: BookGetAllBooksAdminViewItem = {
+                        id: x._id.toString(),
                         title: x.title,
-                        type:x.type, 
-                        price: x.price, 
-                        authors: [] 
+                        type: x.type,
+                        price: x.price,
+                        authors: []
                     }
                     book.authors = x.authors.map(x => {
-                        const authors: AuthorBookGetAllBooksAdminViewItem = { 
-                            id: x._id.toString(), 
-                            firstName: x.firstName, 
-                            lastName: x.lastName, 
-                            fullName: x.fullName 
+                        const authors: AuthorBookGetAllBooksAdminViewItem = {
+                            id: x._id.toString(),
+                            firstName: x.firstName,
+                            lastName: x.lastName,
+                            fullName: x.fullName
                         }
                         return authors;
                     });
@@ -257,7 +257,7 @@ export class AdminService {
                     response.books.push(book);
                 })
             });
-            response.quantity = await this.getFilteredBooksCount(requestFilterAdminView);
+        response.quantity = await this.getFilteredBooksCount(requestFilterAdminView);
         return response;
     }
 
@@ -290,7 +290,7 @@ export class AdminService {
         await this.bookRepository.delete(id);
     }
 
-    private async getFilteredBooksCount(requestFilterAdminView:RequestFilterAdminView): Promise<number>{
+    private async getFilteredBooksCount(requestFilterAdminView: RequestFilterAdminView): Promise<number> {
         requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
         const titleSearch = {
             title: {
@@ -314,14 +314,14 @@ export class AdminService {
                 $and: [{ $or: [titleSearch, authorSearch] }],
             }
         }
-        const response:number = await this.bookRepository
+        const response: number = await this.bookRepository
             .findAndCount({
                 where: searchModel
             })
-            .then((response:[Book[], number]) => {
+            .then((response: [Book[], number]) => {
                 return response[1]
             });
-        return response;    
+        return response;
     }
 
     //#endregion Book
@@ -353,10 +353,18 @@ export class AdminService {
     public async updateUser(updateUserAdminView: UpdateUserAdminView): Promise<void> {
         const user: User = await this.userRepository
             .findOne(updateUserAdminView.id);
+
+        const userByEmail: User = await this.userRepository
+            .findOne({email:updateUserAdminView.email});
+
         if (!user) {
             throw new HttpException({ error: `User ${updateUserAdminView.id} is not foudnd` }, 403);
         }
-        
+
+        if (userByEmail && user.email !== updateUserAdminView.email) {
+            throw new HttpException({ error: `User with ${updateUserAdminView.email} email is already exist` }, 403);
+        }
+
         user.email = updateUserAdminView.email;
         user.age = updateUserAdminView.age;
         user.firstName = updateUserAdminView.firstName;
@@ -426,11 +434,12 @@ export class AdminService {
         const response: ResponseLoginAuthView = { access_token: '' };
         const user = await this.userRepository
             .findOne(loginAsUserAdminView.id);
-            
-        let payload: PayloadAuthView = { 
-            sub: user._id, 
-            email: user.email, 
-            roles: Array<string>() };
+
+        let payload: PayloadAuthView = {
+            sub: user._id,
+            email: user.email,
+            roles: Array<string>()
+        };
 
         if (user.roles) {
             payload = {
@@ -448,10 +457,10 @@ export class AdminService {
 
         return response;
     }
-    public async getFilteredUsers(requestFilterAdminView:RequestFilterAdminView): Promise<GetFilteredUsersAdminView> {
+    public async getFilteredUsers(requestFilterAdminView: RequestFilterAdminView): Promise<GetFilteredUsersAdminView> {
         const response: GetFilteredUsersAdminView = new GetFilteredUsersAdminView();
         requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
-        const offset:number = (requestFilterAdminView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
+        const offset: number = (requestFilterAdminView.page - SharedConstants.ONE_VALUE) * this.paginationModel.maxSize;
         const fullNameSearch = {
             email: {
                 $regex: `.*${requestFilterAdminView.searchString}.*`, $options: 'i'
@@ -468,24 +477,24 @@ export class AdminService {
                 skip: offset,
                 take: this.paginationModel.maxSize
             })
-            .then((result:User[]) => {
-                response.users = result.map(x=>{
-                    const user:UserGetFilteredUsersAdminViewItem = {
-                        id:x._id.toHexString(),
-                        email:x.email,
-                        firstName:x.firstName,
-                        lastName:x.lastName,
-                        fullName:x.fullName,
-                        age:x.age                        
+            .then((result: User[]) => {
+                response.users = result.map(x => {
+                    const user: UserGetFilteredUsersAdminViewItem = {
+                        id: x._id.toHexString(),
+                        email: x.email,
+                        firstName: x.firstName,
+                        lastName: x.lastName,
+                        fullName: x.fullName,
+                        age: x.age
                     }
                     return user;
                 })
             });
-            response.quantity = await this.getFilteredUsersCount(requestFilterAdminView);
+        response.quantity = await this.getFilteredUsersCount(requestFilterAdminView);
         return response;
     }
 
-    private async getFilteredUsersCount(requestFilterAdminView:RequestFilterAdminView): Promise<number>{
+    private async getFilteredUsersCount(requestFilterAdminView: RequestFilterAdminView): Promise<number> {
         requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
         const emailSearch = {
             email: {
@@ -497,14 +506,14 @@ export class AdminService {
         if (requestFilterAdminView.searchString !== null) {
             searchModel = emailSearch;
         }
-        const response:number = await this.userRepository
+        const response: number = await this.userRepository
             .findAndCount({
                 where: searchModel,
             })
-            .then((result:[User[],number]) => {
+            .then((result: [User[], number]) => {
                 return result[1];
             });
-            return response;    
+        return response;
     }
     //#endregion User
 }
