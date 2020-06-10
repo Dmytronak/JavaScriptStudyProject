@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, SyntheticEvent } from 'react';
 import './header.component.scss';
 import { Link } from 'react-router-dom';
 import { SharedConstants } from '../../constants/shared.constant';
@@ -15,11 +15,13 @@ const authService = new AuthService();
 const HeaderComponent: React.FC<any> = () => {
     const cartState: CartShopingCartReducer = useSelector((cartState: ShopingCartRootStateReducer) => cartState.ShopingCartReducer);
     const [state, setState] = React.useState<any>({
-        showUser: false,
+        showUser: true,
         isUserAdmin: false,
-        adminMenuIsToggle: false,
         expandMenu: false,
         user: SharedConstants.EMPTY_VALUE
+    });
+    const [dropDownState, setDropDownState] = React.useState<any>({
+        adminMenuIsToggle: false,
     });
 
     useEffect(() => {
@@ -44,9 +46,9 @@ const HeaderComponent: React.FC<any> = () => {
         authService.signOut();
     }
     const showAdminMenu = () => {
-        setState({
-            ...state,
-            adminMenuIsToggle: state.adminMenuIsToggle ? false : true,
+        setDropDownState({
+            ...dropDownState,
+            adminMenuIsToggle: dropDownState.adminMenuIsToggle ? false : true,
         });
     };
     const expandMenu = () => {
@@ -55,7 +57,25 @@ const HeaderComponent: React.FC<any> = () => {
             expandMenu: state.expandMenu ? false : true,
         });
     };
+    const useOutsideAlerter = (ref: React.MutableRefObject<any>): void => {
+        useEffect(() => {
+            const handleClickOutside = (event: any) => {
+                if (ref.current && !ref.current.contains(event.target) && !dropDownState.adminMenuIsToggle) {
+                    setDropDownState({
+                        ...dropDownState,
+                        adminMenuIsToggle: false
+                    });
+                }
+            }
 
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [ref]);
+    }
+    const wrapperRef: React.MutableRefObject<any> = useRef(null);
+    useOutsideAlerter(wrapperRef);
     return (
         <header>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -97,7 +117,7 @@ const HeaderComponent: React.FC<any> = () => {
                                     state.isUserAdmin ?
                                         <li className="nav-item dropdown">
                                             <a className="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={showAdminMenu}>Admin</a>
-                                            <div className={state.adminMenuIsToggle ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="navbarDropdown">
+                                            <div className={dropDownState.adminMenuIsToggle ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="navbarDropdown" ref={wrapperRef}>
                                                 <Link className="dropdown-item" to='/admin/users'>Users</Link>
                                                 <Link className="dropdown-item" to='/admin/books'>Books</Link>
                                             </div>
