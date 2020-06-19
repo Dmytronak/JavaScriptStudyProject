@@ -52,6 +52,10 @@ const BooksComponent: React.FC = () => {
     };
 
     const handlePageChange = (page: number): void => {
+        setCriterias({
+            ...criterias,
+            page:page
+        });
         criterias.page = page;
         bookService.filteredBooks(criterias)
             .then((response: IFilteredBookResponseView) => {
@@ -61,10 +65,13 @@ const BooksComponent: React.FC = () => {
     const getFilteredBooks = (books: IFilteredBookResponseView) => {
         setBooksToModel(books);
     }
+    const getCriteriasBooks = (criterias: FilterCriteriasBookView) => {
+        setCriterias(criterias);
+    }
     const itemsPerPage: number = PaginationCongfig.maxSize;
     return (
         <div className="main-content">
-            <FilterComponent outputFilteredBooks={getFilteredBooks} />
+            <FilterComponent outputFilteredBooks={getFilteredBooks} outputCriteriasBooks={getCriteriasBooks} />
             <div className="books-group">
                 <BookList />
                 <div className="books-pagination">

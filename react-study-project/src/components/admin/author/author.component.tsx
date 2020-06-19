@@ -47,7 +47,15 @@ const AdminAuthorComponent: React.FC = () => {
             });
     });
     const handlePageChange = (page: number) => {
-
+        setCriterias({
+            ...criterias,
+            page:page
+        });
+        criterias.page = page;
+        adminService.filteredAuthors(criterias)
+        .then((response: IGetFilteredAuthorsAdminView) => {
+            setAuthors(response);
+        });
     }
     const searchAuthorByFullName = (event: SyntheticEvent<HTMLInputElement>) => {
         const value = event.currentTarget.value;

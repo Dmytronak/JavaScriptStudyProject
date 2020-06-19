@@ -178,6 +178,10 @@ const AdminBookComponent: React.FC = () => {
         filteredBooks.books[updatedBookIndex].authors = updatedAuthors
     };
     const handlePageChange = (page: number): void => {
+        setCriterias({
+            ...criterias,
+            page:page
+        });
         criterias.page = page;
         adminService.filteredBooks(criterias)
             .then((resposne: IGetFilteredBooksAdminView) => {

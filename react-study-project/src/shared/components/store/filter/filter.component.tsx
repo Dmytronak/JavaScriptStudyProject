@@ -12,7 +12,7 @@ import { EnumToArrayHelper } from "../../../helpers/enum-to-array.helper";
 const bookService: BookService = new BookService();
 const RangeWithTooltip = createSliderWithTooltip(Range);
 
-const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
+const FilterComponent: React.FC<any> = ({ outputFilteredBooks,outputCriteriasBooks }) => {
     const [priceRange, setPriceRange] = React.useState<any>({
         min: SharedConstants.ZERO_VALUE,
         max: SharedConstants.ONE_HUNDRED
@@ -37,6 +37,7 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
         bookService.filteredBooks(criterias)
             .then((response: IFilteredBookResponseView) => {
                 outputFilteredBooks(response);
+                outputCriteriasBooks(criterias);
                 const priceRange = {
                     min: response.minPrice,
                     max: response.maxPrice
@@ -63,19 +64,28 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
     }
     const searchBookByNames = (event: SyntheticEvent<HTMLInputElement>) => {
         const value = event.currentTarget.value;
-        criterias.searchString = value;
+        setCriterias({
+            ...criterias,
+            searchString:value
+        });
         getBookData(criterias);
     }
     const priceRangeChange = (value: number[]) => {
-        criterias.priceMin = value[0];
-        criterias.priceMax = value[1];
+        setCriterias({
+            ...criterias,
+            priceMin:value[0],
+            priceMax:value[1]
+        });
     }
     const searchBooksByPriceRange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         getBookData(criterias);
     }
-    const searchBooksBytType = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const searchBooksByType = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = parseInt(event.currentTarget.value);
-        criterias.type = value;
+        setCriterias({
+            ...criterias,
+            type:value
+        });
         getBookData(criterias);
     }
     const bookTypes = EnumToArrayHelper(BookType);
@@ -108,7 +118,7 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks }) => {
             <button className="btn btn-outline-success" onClick={searchBooksByPriceRange}>Ok</button>
             <div className="filter-type">
                 <p>Book type</p>
-                <select className="form-control" onChange={searchBooksBytType}>
+                <select className="form-control" onChange={searchBooksByType}>
                     {
                         bookTypes.map(x => {
                             return <option value={x} key={x}>{getTypeName(x)}</option>

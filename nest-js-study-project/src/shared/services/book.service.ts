@@ -156,7 +156,6 @@ export class BookService {
                 };
             }
         }
-
         await this.bookRepository
             .find({
                 where: searchModel,
@@ -238,7 +237,7 @@ export class BookService {
 
     }
 
-    private async getFilteredBookCount(requestFilterBookView: RequestFilterBookView) {
+    private async getFilteredBookCount(requestFilterBookView: RequestFilterBookView):Promise<number> {
         let response = SharedConstants.ZERO_VALUE;
         requestFilterBookView.searchString = requestFilterBookView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterBookView.searchString : null;
         const titleSearch = {

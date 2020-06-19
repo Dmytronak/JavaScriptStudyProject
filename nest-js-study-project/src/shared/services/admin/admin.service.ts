@@ -220,18 +220,16 @@ export class AdminService {
         if (isExistBook) {
             throw new HttpException({ error: `Book ${createBookAdminView.title} is already in base` }, 403);
         }
-
         const book: Book = new Book();
         book.title = createBookAdminView.title;
         book.type = createBookAdminView.type;
-        book.price = createBookAdminView.price;
+        book.price = +createBookAdminView.price;
         book.authors = authors;
         await this.bookRepository.save(book);
 
         const response: string = book._id.toHexString();
         return response;
     }
-
     public async getAllBooks(): Promise<GetAllBooksAdminView> {
         const response: GetAllBooksAdminView = new GetAllBooksAdminView();
         await this.bookRepository
@@ -317,7 +315,6 @@ export class AdminService {
         response.quantity = await this.getFilteredBooksCount(requestFilterAdminView);
         return response;
     }
-
     public async updateBook(updateBookAdminView: UpdateBookAdminView): Promise<void> {
         const ObjectID = require('mongodb').ObjectID
         const book: Book = await this.bookRepository
@@ -337,16 +334,14 @@ export class AdminService {
 
         book.title = updateBookAdminView.title;
         book.type = updateBookAdminView.type;
-        book.price = updateBookAdminView.price;
+        book.price = +updateBookAdminView.price;
         book.authors = authors;
 
         await this.bookRepository.update(book._id.toHexString(), book)
     }
-
     public async deleteBook(id: string): Promise<void> {
         await this.bookRepository.delete(id);
     }
-
     private async getFilteredBooksCount(requestFilterAdminView: RequestFilterAdminView): Promise<number> {
         requestFilterAdminView.searchString = requestFilterAdminView.searchString !== SharedConstants.EMPTY_VALUE ? requestFilterAdminView.searchString : null;
         const titleSearch = {
@@ -380,7 +375,6 @@ export class AdminService {
             });
         return response;
     }
-
     //#endregion Book
 
     //#region User
