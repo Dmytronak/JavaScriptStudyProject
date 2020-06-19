@@ -15,6 +15,7 @@ import UpdatePasswordAdminComponent from "../../../shared/modals/admin/update-pa
 import { ILoginAsUserAdminView } from "../../../shared/interfaces/admin/user/login-as-user.admin.view";
 import { IResponseLoginAuthView } from "../../../shared/interfaces/auth/response-login-auth.view";
 import { AuthService } from "../../../shared/services/auth.service";
+import '../user/user.component.scss';
 
 const adminService = new AdminService();
 const toastMessagesSerivce = new ToastMessagesSerivce();
@@ -76,6 +77,14 @@ const AdminUserComponent: React.FC = () => {
     const removeUser = (userId:string):void =>{
         adminService.deleteUser(userId)
         .then((resposne) => {
+            const removedUserIndex: number = filteredUsers.users.findIndex(x => x.id === userId);
+            filteredUsers.users.splice(removedUserIndex, SharedConstants.ONE_VALUE);
+            filteredUsers.quantity -= SharedConstants.ONE_VALUE;
+            setUsers({
+                ...filteredUsers.users,
+                quantity: filteredUsers.quantity,
+                users: filteredUsers.users
+            });
             toastMessagesSerivce.warning(AdminConstants.REMOVE_USER_SUCCESSFULLY);
         });
     };
@@ -116,13 +125,15 @@ const AdminUserComponent: React.FC = () => {
     };
     const itemsPerPage: number = PaginationCongfig.maxSize;
     return (
-        filteredUsers.users.length > SharedConstants.ZERO_VALUE ?
-            <div className="admin-book-gropup">
-                <div className="admin-book-header">
-                    <span className="admin-book-header-search">Users</span>
-                    <input type="text" className="admin-book-header-search-input" placeholder="Search by email" onChange={searchUserByEmail}></input>
-                </div>
-                <div className="admin-book-table">
+        <div className="admin-user-group">
+        <div className="admin-user-header">
+            <span className="admin-user-header-search">Users</span>
+            <input type="text" className="admin-user-header-search-input" placeholder="Search by email" onChange={searchUserByEmail}></input>
+        </div>
+        {
+        filteredUsers.quantity > SharedConstants.ZERO_VALUE ?
+            <div className="admin-user-group">
+                <div className="admin-user-table">
                     <table className="table table-striped">
                         <thead className="thead-dark">
                             <tr className="header">
@@ -154,7 +165,7 @@ const AdminUserComponent: React.FC = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="admin-book-table-pagination">
+                <div className="admin-user-table-pagination">
                     <Pagination
                         activePage={criterias.page}
                         itemsCountPerPage={itemsPerPage}
@@ -167,9 +178,11 @@ const AdminUserComponent: React.FC = () => {
              <UpdatePasswordAdminComponent inputUpdatedUser={updatingUser}  inputPasswordModalState={pageState} outputPasswordModalState={closeUpdatePassword}/>
             </div>
             :
-            <div className="admin-book-gropup">
+            <div className="admin-user-group">
                 <span>{AdminConstants.EMPTY_ADMIN_USER_EMPTY}</span>
             </div>
+            }
+        </div>
     );
 }
 

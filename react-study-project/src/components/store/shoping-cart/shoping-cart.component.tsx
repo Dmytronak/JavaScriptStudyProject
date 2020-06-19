@@ -11,7 +11,7 @@ const shoppingCartService: ShoppingCartService = new ShoppingCartService();
 
 const ShoppingCartComponent: React.FC = () => {
     const dispatch = useDispatch();
-    const cartState:CartShopingCartReducer = useSelector((cartState:ShopingCartRootStateReducer) => cartState.ShopingCartReducer);
+    const cartState: CartShopingCartReducer = useSelector((cartState: ShopingCartRootStateReducer) => cartState.ShopingCartReducer);
     useEffect(() => {
         const cart: IShoppingCartView = shoppingCartService.getFromCart();
         dispatch({
@@ -21,7 +21,7 @@ const ShoppingCartComponent: React.FC = () => {
     }, [])
     const clearCart = () => {
         shoppingCartService.clearCart();
-        dispatch({ type: ShoppingActionConstant.SHOPPING_ACTION_CART_CLEAR});
+        dispatch({ type: ShoppingActionConstant.SHOPPING_ACTION_CART_CLEAR });
     }
     return (
         <div className="shopping-cart-gropup">
@@ -69,8 +69,10 @@ const ShoppingCartComponent: React.FC = () => {
                     </div>
                     :
                     <div className="shopping-cart-header">
+                        <span><img src= {`${process.env.PUBLIC_URL}/images/search--v2.png`} /></span>
                         <span>{BookConstants.EMPTY_SHOPING_CART}</span>
-                    </div> 
+
+                    </div>
             }
         </div>
     );

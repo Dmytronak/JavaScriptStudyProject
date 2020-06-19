@@ -1,36 +1,41 @@
-.admin-user-group{
+.admin-author-group{
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-.admin-user-header{
+.admin-author-header{
     display: inline-flex;
     justify-content: center;
     margin: 10px auto;
 
 }
-.admin-user-header-search{
+.admin-author-header-search{
     margin-left: 10px;
     margin-right: 10px;
 }
-.admin-user-table{
+.admin-author-table{
     overflow-x: auto;
 }
-.admin-user-table-authors{
+.admin-author-table-authors{
     display: grid;
 }
-.admin-user-add-footer{
+.admin-author-add-footer{
     display: flex;
     justify-content: flex-end;
     margin: 10px auto;
 }
-.admin-user-table-pagination{
+.admin-author-table-pagination{
     display: flex;
     justify-content: center;
     margin: 10px auto;
- 
+}
+.btn-primary{
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    margin-left: 5px;
 }
 .page-link{
     color: #343a40 !important;
@@ -46,6 +51,6 @@
     background-color: #343a40 !important;
     border-color: #454d55 !important;
 }
-.admin-user-header-search-input{
+.admin-author-header-search-input{
     display: inline-flex;
 }

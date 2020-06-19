@@ -34,7 +34,7 @@ const UpdateBookAdminComponent: React.FC<any> = ({ inputUpdatedBook, inputBookPa
   }, [inputUpdatedBook]);
 
   const hideModal = (): void => {
-    outputBookPageState(false)
+    outputBookPageState(false);
   }
   const handleSubmitForm = (event: React.SyntheticEvent<HTMLFormElement>): void => {
     event.preventDefault();

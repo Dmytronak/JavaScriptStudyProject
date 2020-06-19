@@ -119,6 +119,7 @@ const HeaderComponent: React.FC<any> = () => {
                                             <a className="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={showAdminMenu}>Admin</a>
                                             <div className={dropDownState.adminMenuIsToggle ? 'dropdown-menu show' : 'dropdown-menu'} aria-labelledby="navbarDropdown" ref={wrapperRef}>
                                                 <Link className="dropdown-item" to='/admin/users'>Users</Link>
+                                                <Link className="dropdown-item" to='/admin/authors'>Authors</Link>
                                                 <Link className="dropdown-item" to='/admin/books'>Books</Link>
                                             </div>
                                         </li> : SharedConstants.EMPTY_VALUE

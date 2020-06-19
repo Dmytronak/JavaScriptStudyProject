@@ -1,6 +1,6 @@
 import React, { useState, useEffect, SyntheticEvent } from "react";
 import { BookConstants } from "../../../shared/constants/book.constants";
-import { IGetAllBooksAdminView, IBookIGetAllBooksAdminViewItem, IAuthorBookIGetAllBooksAdminViewItem } from "../../../shared/interfaces/admin/book/get-all-books.admin.view";
+import { IBookIGetAllBooksAdminViewItem, IAuthorBookIGetAllBooksAdminViewItem } from "../../../shared/interfaces/admin/book/get-all-books.admin.view";
 import { SharedConstants } from "../../../shared/constants/shared.constant";
 import { AdminService } from "../../../shared/services/admin/admin.service";
 import { BookType } from "../../../shared/enums/book-type.enum";
@@ -63,7 +63,6 @@ const AdminBookComponent: React.FC = () => {
             });
     }, []);
     const bookTypes = EnumToArrayHelper(BookType);
-
     const showAddBook = (): void => {
         setPageState({
             ...pageState,
@@ -196,150 +195,155 @@ const AdminBookComponent: React.FC = () => {
     const itemsPerPage: number = PaginationCongfig.maxSize;
 
     return (
-        filteredBooks.books.length > SharedConstants.ZERO_VALUE ?
-            <div className="admin-book-gropup">
-                <div className="admin-book-header">
-                    <span className="admin-book-header-search">Books</span>
-                    <input type="text" className="admin-book-header-search-input" placeholder="Search by title or author" onChange={searchBookByNames}></input>
-                </div>
-                <div className="admin-book-table">
-                    <table className="table table-striped">
-                        <thead className="thead-dark">
-                            <tr className="header">
-                                <th>Code</th>
-                                <th>Title</th>
-                                <th>Type</th>
-                                <th>Price</th>
-                                <th>Authors</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                filteredBooks.books.map((book: IBookIGetAllBooksAdminViewItem) => {
-                                    return <tr key={book.id}>
-                                        <td>{book.id}</td>
-                                        <td>{book.title}</td>
-                                        <td>{BookType[book.type]}</td>
-                                        <td>{book.price}$</td>
-                                        <td>
-                                            <div className="admin-book-table-authors">
-                                                {
-                                                    book.authors.map((author: IAuthorBookIGetAllBooksAdminViewItem) => {
-                                                        return <span key={author.id}>{author.fullName}</span>
-                                                    })
-                                                }
-                                            </div>
-
-                                        </td>
-
-                                        <td><button className="btn btn-outline-info" onClick={() => showUpdateBook(book)}><FontAwesomeIcon icon={faPencilAlt} /></button></td>
-                                        <td><button className="btn btn-outline-danger" onClick={() => removeBook(book.id)}><FontAwesomeIcon icon={faTrash} /></button></td>
-                                    </tr>
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <div className="admin-book-table-pagination">
-                    <Pagination
-                        activePage={criterias.page}
-                        itemsCountPerPage={itemsPerPage}
-                        totalItemsCount={filteredBooks.quantity}
-                        onChange={(page) => handlePageChange(page)}
-                        itemClass="page-item"
-                        linkClass="page-link" />
-                </div>
-
-                <div>
-                    Add new Book <button className="btn btn-outline-success" onClick={showAddBook}><FontAwesomeIcon icon={faPlus} /></button>
-                </div>
-                {
-                    pageState.isAddBookShow ?
-                        <form onSubmit={handleSubmitChanges}>
-                            <div className="form-group">
-                                <label>Title</label>
-                                <input type="text" className="form-control" name="title" placeholder="Book title" onChange={handleChangesInput}></input>
-                            </div>
-                            <div className="form-group">
-                                <label>Type</label>
-                                <select className="form-control" value={addedBook.type} onChange={handleChangesInput}>
-                                    {
-                                        bookTypes.map((type: number) => {
-                                            return <option value={type} key={type}>{BookType[type]}</option>
-                                        })
-                                    }
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Price</label>
-                                <input type="text" className="form-control" name="price" placeholder="Input book price in $" onChange={handleChangesInput}></input>
-                            </div>
-                            <div className="form-group">
-                                <label>Authors</label>
-                                <select className="form-control" value={addedBook.authors.map(x => x.authorId)} multiple size={3} onChange={handleChangesInput}>
-                                    {
-                                        authors.allAuthors.map((author: IAuthorIGetAllAuthorsAdminViewItem) => {
-                                            return <option value={author.id} key={author.id}>{author.fullName}</option>
-                                        })
-                                    }
-                                </select>
-                            </div>
-                            <div className="admin-book-add-footer">
-                                <button type="submit" className="btn btn-outline-secondary" onClick={closeAddBook}>Close</button>
-                                <button type="submit" className="btn btn-primary">Save</button>
-                            </div>
-                        </form>
-                        : SharedConstants.EMPTY_VALUE
-                }
-                <UpdateBookAdminComponent inputUpdatedBook={updatingBook} inputBookPageState={pageState} outputBookPageState={closeUpdateBook} outputUpdatedBook={handleUpdatedBook} />
+        <div className="admin-book-group">
+            <div className="admin-book-header">
+                <span className="admin-book-header-search">Books</span>
+                <input type="text" className="admin-book-header-search-input" placeholder="Search by title or author" onChange={searchBookByNames}></input>
             </div>
-            :
-            <div className="admin-book-gropup">
-                <span>{BookConstants.EMPTY_ADMIN_BOOK_EMPTY}</span>
-                <span>
-                    Add book <button className="btn btn-outline-success" onClick={showAddBook}><FontAwesomeIcon icon={faPlus} /></button>
-                </span>
-                {
-                    pageState.isAddBookShow ?
-                        <form onSubmit={handleSubmitChanges}>
-                            <div className="form-group">
-                                <label>Title</label>
-                                <input type="text" className="form-control" name="title" placeholder="Book title" onChange={handleChangesInput}></input>
-                            </div>
-                            <div className="form-group">
-                                <label>Type</label>
-                                <select className="form-control" value={addedBook.type} onChange={handleChangesInput}>
-                                    {
-                                        bookTypes.map((type: number) => {
-                                            return <option value={type} key={type}>{BookType[type]}</option>
-                                        })
-                                    }
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Price</label>
-                                <input type="text" className="form-control" name="price" placeholder="Input book price in $" onChange={handleChangesInput}></input>
-                            </div>
-                            <div className="form-group">
-                                <label>Authors</label>
-                                <select className="form-control" value={addedBook.authors.map(x => x.authorId)} multiple size={3} onChange={handleChangesInput}>
-                                    {
-                                        authors.allAuthors.map((author: IAuthorIGetAllAuthorsAdminViewItem) => {
-                                            return <option value={author.id} key={author.id}>{author.fullName}</option>
-                                        })
-                                    }
-                                </select>
-                            </div>
-                            <div className="admin-book-add-footer">
-                                <button type="submit" className="btn btn-outline-secondary" onClick={closeAddBook}>Close</button>
-                                <button type="submit" className="btn btn-primary">Save</button>
-                            </div>
-                        </form>
-                        : SharedConstants.EMPTY_VALUE
-                }
-            </div>
+            {
+            filteredBooks.quantity > SharedConstants.ZERO_VALUE ?
+                <div className="admin-book-group">
+                    <div className="admin-book-table">
+                        <table className="table table-striped">
+                            <thead className="thead-dark">
+                                <tr className="header">
+                                    <th>Code</th>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>Price</th>
+                                    <th>Authors</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    filteredBooks.books.map((book: IBookIGetAllBooksAdminViewItem) => {
+                                        return <tr key={book.id}>
+                                            <td>{book.id}</td>
+                                            <td>{book.title}</td>
+                                            <td>{BookType[book.type]}</td>
+                                            <td>{book.price}$</td>
+                                            <td>
+                                                <div className="admin-book-table-authors">
+                                                    {
+                                                        book.authors.map((author: IAuthorBookIGetAllBooksAdminViewItem) => {
+                                                            return <span key={author.id}>{author.fullName}</span>
+                                                        })
+                                                    }
+                                                </div>
+
+                                            </td>
+
+                                            <td><button className="btn btn-outline-info" onClick={() => showUpdateBook(book)}><FontAwesomeIcon icon={faPencilAlt} /></button></td>
+                                            <td><button className="btn btn-outline-danger" onClick={() => removeBook(book.id)}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                        </tr>
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="admin-book-table-pagination">
+                        <Pagination
+                            activePage={criterias.page}
+                            itemsCountPerPage={itemsPerPage}
+                            totalItemsCount={filteredBooks.quantity}
+                            onChange={(page) => handlePageChange(page)}
+                            itemClass="page-item"
+                            linkClass="page-link" />
+                    </div>
+
+                    <div>
+                        Add new book <button className="btn btn-outline-success" onClick={showAddBook}><FontAwesomeIcon icon={faPlus} /></button>
+                    </div>
+                    {
+                        pageState.isAddBookShow ?
+                            <form onSubmit={handleSubmitChanges}>
+                                <div className="form-group">
+                                    <label>Title</label>
+                                    <input type="text" className="form-control" name="title" placeholder="Book title" onChange={handleChangesInput}></input>
+                                </div>
+                                <div className="form-group">
+                                    <label>Type</label>
+                                    <select className="form-control" value={addedBook.type} onChange={handleChangesInput}>
+                                        {
+                                            bookTypes.map((type: number) => {
+                                                return <option value={type} key={type}>{BookType[type]}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Price</label>
+                                    <input type="text" className="form-control" name="price" placeholder="Input book price in $" onChange={handleChangesInput}></input>
+                                </div>
+                                <div className="form-group">
+                                    <label>Authors</label>
+                                    <select className="form-control" value={addedBook.authors.map(x => x.authorId)} multiple size={3} onChange={handleChangesInput}>
+                                        {
+                                            authors.allAuthors.map((author: IAuthorIGetAllAuthorsAdminViewItem) => {
+                                                return <option value={author.id} key={author.id}>{author.fullName}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                <div className="admin-book-add-footer">
+                                    <button type="submit" className="btn btn-outline-secondary" onClick={closeAddBook}>Close</button>
+                                    <button type="submit" className="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                            : SharedConstants.EMPTY_VALUE
+                    }
+                    <UpdateBookAdminComponent inputUpdatedBook={updatingBook} inputBookPageState={pageState} outputBookPageState={closeUpdateBook} outputUpdatedBook={handleUpdatedBook} />
+                </div>
+                :
+                <div className="admin-book-group">
+                    <span>{BookConstants.EMPTY_ADMIN_BOOK_EMPTY}</span>
+                    <span>
+                        Add book <button className="btn btn-outline-success" onClick={showAddBook}><FontAwesomeIcon icon={faPlus} /></button>
+                    </span>
+                    {
+                        pageState.isAddBookShow ?
+                            <form onSubmit={handleSubmitChanges}>
+                                <div className="form-group">
+                                    <label>Title</label>
+                                    <input type="text" className="form-control" name="title" placeholder="Book title" onChange={handleChangesInput}></input>
+                                </div>
+                                <div className="form-group">
+                                    <label>Type</label>
+                                    <select className="form-control" value={addedBook.type} onChange={handleChangesInput}>
+                                        {
+                                            bookTypes.map((type: number) => {
+                                                return <option value={type} key={type}>{BookType[type]}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Price</label>
+                                    <input type="text" className="form-control" name="price" placeholder="Input book price in $" onChange={handleChangesInput}></input>
+                                </div>
+                                <div className="form-group">
+                                    <label>Authors</label>
+                                    <select className="form-control" value={addedBook.authors.map(x => x.authorId)} multiple size={3} onChange={handleChangesInput}>
+                                        {
+                                            authors.allAuthors.map((author: IAuthorIGetAllAuthorsAdminViewItem) => {
+                                                return <option value={author.id} key={author.id}>{author.fullName}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                                <div className="admin-book-add-footer">
+                                    <button type="submit" className="btn btn-outline-secondary" onClick={closeAddBook}>Close</button>
+                                    <button type="submit" className="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                            : SharedConstants.EMPTY_VALUE
+                    }
+                </div>
+            }
+        </div>
+
     );
 }
 

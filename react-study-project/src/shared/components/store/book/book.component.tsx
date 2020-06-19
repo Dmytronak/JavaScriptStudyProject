@@ -24,7 +24,7 @@ const BookComponent: React.FC<IBookGetAllBookResponseViewItem> = (book:IBookGetA
     };
     return (
         <div className="card-book">
-            <img className="book-card-img" src={BookConstants.BOOK_LINK} alt="book-image" />
+            <img className="book-card-img" src={`${process.env.PUBLIC_URL}/images/book_noun_001_01679.jpg`} alt="book-image" />
             <div className="card-body">
                 <h5 className="card-title">{book.title}</h5>
                 {

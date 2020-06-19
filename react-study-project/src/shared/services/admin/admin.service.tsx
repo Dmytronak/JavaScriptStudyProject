@@ -10,6 +10,9 @@ import { IUpdateUserAdminView } from '../../interfaces/admin/user/update-user.ad
 import { IUpdatePasswordAdminView } from '../../interfaces/admin/user/update-password-user.admin.view';
 import { ILoginAsUserAdminView } from '../../interfaces/admin/user/login-as-user.admin.view';
 import { IResponseLoginAuthView } from '../../interfaces/auth/response-login-auth.view';
+import { IGetFilteredAuthorsAdminView } from '../../interfaces/admin/author/get-filtered-authors-admin.view';
+import { ICreateAuthorAdminView } from '../../interfaces/admin/author/create-author.admin.view';
+import { IUpdateAuthorAdminView } from '../../interfaces/admin/author/update-author.admin.view';
 
 export class AdminService {
     //#region Book
@@ -31,8 +34,20 @@ export class AdminService {
     //#endregion Book
 
     //#region Authors
+    public async createAuthor(author: ICreateAuthorAdminView): Promise<string> {
+        return axios.post(`${process.env.REACT_APP_SERVER_URL}/admin/createAuthor`, author);
+    }
     public async getAllAuthors(): Promise<IGetAllAuthorsAdminView> {
         return axios.get(`${process.env.REACT_APP_SERVER_URL}/admin/getAllAuthors`);
+    }
+    public async updateAuthor(author: IUpdateAuthorAdminView): Promise<void> {
+        return axios.post(`${process.env.REACT_APP_SERVER_URL}/admin/updateAuthor`, author);
+    }
+    public async deleteAuthor(authorId: string): Promise<void> {
+        return axios.get(`${process.env.REACT_APP_SERVER_URL}/admin/deleteAuthor/${authorId}`);
+    }
+    public async filteredAuthors(criterias: FilterCriteriasAdminView): Promise<IGetFilteredAuthorsAdminView> {
+        return axios.post(`${process.env.REACT_APP_SERVER_URL}/admin/filteredAuthors`, criterias);
     }
     //#endregion Authors
 

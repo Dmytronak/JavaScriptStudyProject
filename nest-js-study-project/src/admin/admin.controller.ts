@@ -22,6 +22,7 @@ import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { RequestFilterAdminView } from 'src/shared/view-models/admin/filter/request-filter-admin.view';
 import { GetFilteredBooksAdminView } from 'src/shared/view-models/admin/book/get-filtered-books.admin.view';
 import { GetFilteredUsersAdminView } from 'src/shared/view-models/admin/user/get-filtered-users.admin.view';
+import { GetFilteredAuthorsAdminView } from 'src/shared/view-models/admin/author/get-filtered-authors.admin.view';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('admin')
@@ -78,7 +79,7 @@ export class AdminController {
         return response;
     }
     @SetMetadata('roles', ['admin'])
-    @Post('/loginAsUser/')
+    @Post('/loginAsUser')
     async loginAsUser(@Body() loginAsUserAdminView: LoginAsUserAdminView): Promise<ResponseLoginAuthView> {
         return await this.adminService.loginAsUser(loginAsUserAdminView);
     }
@@ -123,8 +124,8 @@ export class AdminController {
 
     @SetMetadata('roles', ['admin'])
     @Post('/createAuthor')
-    async createAuthor(@Body() createAuthorAdminView: CreateAuthorAdminView): Promise<void> {
-        await this.adminService.createAuthor(createAuthorAdminView);
+    async createAuthor(@Body() createAuthorAdminView: CreateAuthorAdminView): Promise<string> {
+       return await this.adminService.createAuthor(createAuthorAdminView);
     }
 
     @SetMetadata('roles', ['admin'])
@@ -148,7 +149,12 @@ export class AdminController {
     async deleteAuthor(@Param() params): Promise<void> {
         await this.adminService.deleteAuthor(params.id);
     }
-
+    @SetMetadata('roles', ['admin'])
+    @Post('/filteredAuthors')
+    async filteredAuthors(@Body()requestFilterAdminView:RequestFilterAdminView): Promise<GetFilteredAuthorsAdminView> {
+        const response = await this.adminService.getFilteredAuthors(requestFilterAdminView);
+        return response;
+    }
     //#endregion Author
 
     //#region Roles

@@ -11,6 +11,7 @@ import OnlyLoggedInPrivateRoute from "../guards/only-logged-in-private-route.gua
 import OnlyAdminPrivateRoute from "../guards/only-admin-private-route.guard";
 import BooksComponent from "../../components/store/books/books.component";
 import ShopingCartComponent from "../../components/store/shoping-cart/shoping-cart.component";
+import AdminAuthorComponent from "../../components/admin/author/author.component";
 
 const Routes: React.FC<any> = (props:any) => {
   return (
@@ -24,6 +25,7 @@ const Routes: React.FC<any> = (props:any) => {
         <OnlyLoggedInPrivateRoute path='/books' exact={true} component={BooksComponent} />
         <OnlyLoggedInPrivateRoute path='/shoppingCart' exact={true} component={ShopingCartComponent} />
         <OnlyAdminPrivateRoute path='/admin/users' exact={true} component={AdminUserComponent} />
+        <OnlyAdminPrivateRoute path='/admin/authors' exact={true} component={AdminAuthorComponent} />
         <OnlyAdminPrivateRoute path='/admin/books' exact={true} component={AdminBookComponent} />
       </Switch>
     </Router>

@@ -39,7 +39,7 @@ const UpdatePasswordAdminComponent: React.FC<any> = ({ inputUpdatedUser, inputPa
         event.preventDefault();
 
         adminService.updatePasswordUser(updatingPassword)
-            .then((response) => {
+            .then((response:void) => {
                 outputPasswordModalState(false)
                 toastMessagesSerivce.success(`User #${updatingUser.id}  password successfully updated`);
             });
