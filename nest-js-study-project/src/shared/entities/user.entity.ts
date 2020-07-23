@@ -30,6 +30,9 @@ export class User extends BaseEntity {
     @Column()
     age: number;
 
+    @Column()
+    profileImage: string;
+
     @Column(type => Role)
     roles:Role[]
 }

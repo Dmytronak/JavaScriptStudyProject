@@ -13,6 +13,7 @@ const UpdateUserAdminComponent: React.FC<any> = ({ inputUpdatedUser, inputUserPa
     id: SharedConstants.EMPTY_VALUE,
     email: SharedConstants.EMPTY_VALUE,
     firstName: SharedConstants.EMPTY_VALUE,
+    image:SharedConstants.EMPTY_VALUE,
     lastName: SharedConstants.EMPTY_VALUE,
     fullName: SharedConstants.EMPTY_VALUE,
     age: SharedConstants.ZERO_VALUE

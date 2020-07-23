@@ -9,9 +9,12 @@ import { AuthConstants } from '../constants/auth.constant';
 import jwtDecode from "jwt-decode";
 import jwt_decode from 'jwt-decode';
 import { AdminConstants } from '../constants/admin.constant';
+import { ImageUploadService } from './image-upload.service';
+import { GetImageUrlHelper } from '../helpers/get-image-url.helper';
 
 const toastMessagesSerivce = new ToastMessagesSerivce();
 const localStorageService = new LocalStorageService();
+const imageUploadService = new ImageUploadService();
 
 export class AuthService {
     public async register(register: IRegisterAuthView): Promise<void> {
@@ -38,12 +41,12 @@ export class AuthService {
         return result;
     }
     public async loginAsUser(accessToken: string): Promise<void> {
-        localStorageService.setItem(AuthConstants.AUTH_TOKEN_KEY,accessToken);
+        localStorageService.setItem(AuthConstants.AUTH_TOKEN_KEY, accessToken);
         toastMessagesSerivce.success(AdminConstants.LOGIN_AS_USER_SUCCESSFULLY)
-        setTimeout(()=>{
+        setTimeout(() => {
             window.location.reload();
-        },7000);
-      
+        }, 7000);
+
     }
     public signOut(): void {
         localStorageService.removeItem(AuthConstants.AUTH_TOKEN_KEY);
@@ -74,6 +77,15 @@ export class AuthService {
         if (token) {
             const decode: string = JSON.stringify(jwt_decode(token));
             result = JSON.parse(decode).email;
+        }
+        return result;
+    }
+    public getUserProfileImageUrl(): string {
+        let result: string = AuthConstants.EMPTY_VALUE;
+        const token = localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
+        if (token) {
+            const decode: string = JSON.stringify(jwt_decode(token));
+            result = GetImageUrlHelper(JSON.parse(decode).profileImage);
         }
         return result;
     }

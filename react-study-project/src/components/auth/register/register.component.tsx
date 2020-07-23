@@ -7,8 +7,11 @@ import { AuthConstants } from "../../../shared/constants/auth.constant";
 import {  MustMatchValidator } from "../../../shared/validators/must-match.validator";
 import { PasswordValidator } from "../../../shared/validators/password.validator";
 import { SharedConstants } from "../../../shared/constants/shared.constant";
+import { ImageUploadService } from "../../../shared/services/image-upload.service";
+import { IResponseUploadedPhoto } from "../../../shared/interfaces/responses/image-upload/response-uploaded-photo";
 
 const authService = new AuthService();
+const imageUploadService = new ImageUploadService();
 const RegisterComponent: React.FC = () => {
     const [register, setFieldForm] = React.useState<IRegisterAuthView>({
         email: AuthConstants.EMPTY_VALUE,
@@ -18,6 +21,7 @@ const RegisterComponent: React.FC = () => {
         password: AuthConstants.EMPTY_VALUE,
         confirmPassword: AuthConstants.EMPTY_VALUE,
         age: SharedConstants.ZERO_VALUE,
+        profileImage: AuthConstants.EMPTY_VALUE,
         errors: {
             emailNotValidText: AuthConstants.EMPTY_PAST_VALUE,
             firstNameNotValidText: AuthConstants.EMPTY_PAST_VALUE,
@@ -34,6 +38,18 @@ const RegisterComponent: React.FC = () => {
             [field]: fieldValue
         });
         valideteForm(field, fieldValue);
+    }
+
+     const onImageUpload = () => (event: React.SyntheticEvent<HTMLInputElement>): void => {
+         const image:File = event.currentTarget.files?.item(0)|| new File([SharedConstants.EMPTY_VALUE],SharedConstants.EMPTY_VALUE);
+        imageUploadService.uploadImage(image)
+         .then((response:IResponseUploadedPhoto)=>{
+            setFieldForm({
+                ...register,
+                profileImage: response.imageName
+            });
+         });
+   
     }
     const onSubmitForm = (event: React.SyntheticEvent<HTMLFormElement>): void => {
         event.preventDefault();
@@ -121,7 +137,7 @@ const RegisterComponent: React.FC = () => {
                         {
                             register.errors.emailNotValidText ?
                                 <span className="error-message">{register.errors.emailNotValidText}</span>
-                                : ''
+                                : AuthConstants.EMPTY_VALUE
                         }
                     </div>
                     <div className="form-group">
@@ -130,7 +146,7 @@ const RegisterComponent: React.FC = () => {
                         {
                             register.errors.firstNameNotValidText ?
                                 <span className="error-message"> {register.errors.firstNameNotValidText}</span>
-                                : ''
+                                : AuthConstants.EMPTY_VALUE
                         }
                     </div>
                     <div className="form-group">
@@ -139,7 +155,7 @@ const RegisterComponent: React.FC = () => {
                         {
                             register.errors.lastNameNotValidText ?
                                 <span className="error-message"> {register.errors.lastNameNotValidText}</span>
-                                : ''
+                                : AuthConstants.EMPTY_VALUE
                         }
                     </div>
                     <div className="form-group">
@@ -148,7 +164,7 @@ const RegisterComponent: React.FC = () => {
                         {
                             register.errors.ageNotValidText ?
                                 <span className="error-message"> {register.errors.ageNotValidText}</span>
-                                : ''
+                                : AuthConstants.EMPTY_VALUE
                         }
                     </div>
                     <div className="form-group">
@@ -157,17 +173,21 @@ const RegisterComponent: React.FC = () => {
                         {
                             register.errors.passwordNotValidText ?
                                 <span className="error-message"> {register.errors.passwordNotValidText}</span>
-                                : ''
+                                : AuthConstants.EMPTY_VALUE
                         }
                     </div>
                     <div className="form-group">
-                        <label>Confirm Password</label>
-                        <input className="form-control" placeholder="Confirm Password " type="password" value={register.confirmPassword} onChange={onInputChange('confirmPassword')} />
+                        <label>Confirm password</label>
+                        <input className="form-control" placeholder="Confirm password " type="password" value={register.confirmPassword} onChange={onInputChange('confirmPassword')} />
                         {
                             register.errors.confirmPasswordNotValidText ?
                                 <span className="error-message"> {register.errors.confirmPasswordNotValidText}</span>
-                                : ''
+                                : AuthConstants.EMPTY_VALUE
                         }
+                    </div>
+                    <div className="form-group">
+                        <label>Profile picture</label>
+                        <input className="form-control" placeholder="Profile picture" type="file" onChange={onImageUpload()} />
                     </div>
                     <div className="form-group">
                         <button type="submit" className="btn btn-primary btn-block" disabled={isValidForm()}>Register</button>

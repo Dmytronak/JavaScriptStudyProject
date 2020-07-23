@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-export function passwordHashHelper(password: string, existSalt: string) {
+export  const passwordHashHelper = (password: string, existSalt: string) => {
     let salt = crypto.randomBytes(16).toString('hex');
     if (existSalt) {
         salt = existSalt;

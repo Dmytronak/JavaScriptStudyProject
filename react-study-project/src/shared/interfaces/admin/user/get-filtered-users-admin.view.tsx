@@ -5,6 +5,7 @@ export interface IGetFilteredUsersAdminView {
 export interface IUserIGetFilteredUsersAdminViewItem {
     id: string;
     email: string;
+    image:string;
     firstName: string;
     lastName: string;
     fullName: string;

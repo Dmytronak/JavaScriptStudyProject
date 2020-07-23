@@ -49,3 +49,17 @@
 .admin-user-header-search-input{
     display: inline-flex;
 }
+td.table-item-avatar {
+    width: 160px;
+    .avatar-container {
+        vertical-align: middle;
+        width: 50px;
+        height: 50px;
+        display: flex;
+    
+        .avatar-image{
+            border-radius: 50%;
+            max-width: 50px;
+        }
+      }
+}

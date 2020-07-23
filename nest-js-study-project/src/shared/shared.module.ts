@@ -9,6 +9,7 @@ import { repositoryProvider } from 'src/shared/providers/repository.provider';
 import { AdminService } from 'src/shared/services/admin/admin.service';
 import { BookService } from 'src/shared/services/book.service';
 import { PaginationModel } from './models/pagination.model';
+import { MulterModule } from '@nestjs/platform-express';
 const providers = [...databaseProvider, ...repositoryProvider];
 const services = [AuthService, AdminService, BookService, PaginationModel];
 
@@ -18,7 +19,10 @@ const services = [AuthService, AdminService, BookService, PaginationModel];
                 isGlobal: true
             }),
         PassportModule,
-        jwtDynamicModule
+        jwtDynamicModule,
+        MulterModule.register({
+            dest: './files',
+          }),
     ],
     providers: [
         JwtStrategy,

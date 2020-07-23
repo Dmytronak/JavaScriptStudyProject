@@ -8,9 +8,10 @@ import { history } from '../../configurations/browser-history.config'
 import { ShopingCartRootStateReducer, CartShopingCartReducer } from '../../interfaces/reducers/shoping-cart-root-state-reducer.view';
 import { useSelector } from 'react-redux';
 import { AuthService } from '../../services/auth.service';
-import { AuthConstants } from '../../constants/auth.constant';
+import { ImageUploadService } from '../../services/image-upload.service';
 
 const authService = new AuthService();
+const imageUploadService = new ImageUploadService();
 
 const HeaderComponent: React.FC<any> = () => {
     const cartState: CartShopingCartReducer = useSelector((cartState: ShopingCartRootStateReducer) => cartState.ShopingCartReducer);
@@ -18,7 +19,8 @@ const HeaderComponent: React.FC<any> = () => {
         showUser: true,
         isUserAdmin: false,
         expandMenu: false,
-        user: SharedConstants.EMPTY_VALUE
+        user: SharedConstants.EMPTY_VALUE,
+        profileImage: SharedConstants.EMPTY_VALUE
     });
     const [dropDownState, setDropDownState] = React.useState<any>({
         adminMenuIsToggle: false,
@@ -30,7 +32,8 @@ const HeaderComponent: React.FC<any> = () => {
                 ...state,
                 showUser: true,
                 isUserAdmin: authService.isAdmin(),
-                user: authService.getUserEmail()
+                user: authService.getUserEmail(),
+                profileImage:authService.getUserProfileImageUrl()
             });
         }
     }, []);
@@ -110,8 +113,11 @@ const HeaderComponent: React.FC<any> = () => {
                                             : SharedConstants.EMPTY_VALUE
                                     }
                                 </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" >{state.user}</a>
+                                <li className="nav-item-avatar">
+                                    <div className="avatar-container">
+                                        <img className="avatar-image" src={state.profileImage}/>
+                                        <a className="nav-link" >{state.user}</a>
+                                    </div>
                                 </li>
                                 {
                                     state.isUserAdmin ?

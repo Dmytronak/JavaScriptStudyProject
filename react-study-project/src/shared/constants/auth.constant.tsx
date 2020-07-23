@@ -26,5 +26,7 @@ export const AuthConstants = {
     ERROR_MESSAGE_UNAUTHORIZE:'Sorry but your account is no authorize',
 
     ERROR_CODE_UNAUTHORIZE:401,
-    ERROR_CODE_HANDLED_ERROR:403
+    ERROR_CODE_HANDLED_ERROR:403,
+
+    GET_IMAGE_URL:'/home/getUploadedImage/',
 }

@@ -76,6 +76,8 @@ const FilterComponent: React.FC<any> = ({ outputFilteredBooks,outputCriteriasBoo
             priceMin:value[0],
             priceMax:value[1]
         });
+        criterias.priceMin = value[0];
+        criterias.priceMax = value[1];
     }
     const searchBooksByPriceRange = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         getBookData(criterias);

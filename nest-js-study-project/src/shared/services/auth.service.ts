@@ -49,6 +49,7 @@ export class AuthService {
         user.hash = credential.hashPassword;
         user.salt = credential.salt;
         user.age = register.age;
+        user.profileImage = register.profileImage;
         user.roles = [role];
         
         await this.userRepository.save(user);
@@ -80,6 +81,7 @@ export class AuthService {
         let payload: PayloadAuthView = {
             sub: user._id,
             email: user.email,
+            profileImage:user.profileImage,
             roles: user.roles
                 .map(x => x.name)
         };

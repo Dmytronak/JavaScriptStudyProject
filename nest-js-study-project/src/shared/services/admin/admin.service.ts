@@ -488,12 +488,16 @@ export class AdminService {
         let payload: PayloadAuthView = {
             sub: user._id,
             email: user.email,
+            profileImage:user.profileImage,
             roles: Array<string>()
         };
 
         if (user.roles) {
             payload = {
-                sub: user._id, email: user.email, roles: user.roles
+                sub: user._id, 
+                email: user.email,
+                profileImage:user.profileImage, 
+                roles: user.roles
                     .map(x => x.name)
             };
         }
@@ -532,6 +536,7 @@ export class AdminService {
                     const user: UserGetFilteredUsersAdminViewItem = {
                         id: x._id.toHexString(),
                         email: x.email,
+                        image:x.profileImage,
                         firstName: x.firstName,
                         lastName: x.lastName,
                         fullName: x.fullName,

@@ -6,6 +6,7 @@ export interface IRegisterAuthView {
     password: string;
     confirmPassword: string;
     age: number;
+    profileImage: string;
     errors:ErrorIRegisterAuthView;
 }
 

@@ -18,4 +18,7 @@ export class RegisterAuthView {
     
     @ApiProperty()
     age: number;
+
+    @ApiProperty()
+    profileImage: string;
 }
