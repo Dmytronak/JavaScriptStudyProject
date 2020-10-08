@@ -421,6 +421,7 @@ export class AdminService {
         user.firstName = updateUserAdminView.firstName;
         user.lastName = updateUserAdminView.lastName;
         user.fullName = updateUserAdminView.fullName;
+        user.profileImage = updateUserAdminView.profileImage;
 
         if (updateUserAdminView.roleId) {
             const role: Role = await this.rolesRepository
@@ -536,7 +537,7 @@ export class AdminService {
                     const user: UserGetFilteredUsersAdminViewItem = {
                         id: x._id.toHexString(),
                         email: x.email,
-                        image:x.profileImage,
+                        profileImage:x.profileImage,
                         firstName: x.firstName,
                         lastName: x.lastName,
                         fullName: x.fullName,

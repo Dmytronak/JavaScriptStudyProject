@@ -16,7 +16,7 @@ const imageUploadService = new ImageUploadService();
 const HeaderComponent: React.FC<any> = () => {
     const cartState: CartShopingCartReducer = useSelector((cartState: ShopingCartRootStateReducer) => cartState.ShopingCartReducer);
     const [state, setState] = React.useState<any>({
-        showUser: true,
+        showUser: false,
         isUserAdmin: false,
         expandMenu: false,
         user: SharedConstants.EMPTY_VALUE,
@@ -33,7 +33,7 @@ const HeaderComponent: React.FC<any> = () => {
                 showUser: true,
                 isUserAdmin: authService.isAdmin(),
                 user: authService.getUserEmail(),
-                profileImage:authService.getUserProfileImageUrl()
+                profileImage: authService.getUserProfileImageUrl()
             });
         }
     }, []);
@@ -113,12 +113,26 @@ const HeaderComponent: React.FC<any> = () => {
                                             : SharedConstants.EMPTY_VALUE
                                     }
                                 </li>
-                                <li className="nav-item-avatar">
-                                    <div className="avatar-container">
-                                        <img className="avatar-image" src={state.profileImage}/>
-                                        <a className="nav-link" >{state.user}</a>
-                                    </div>
-                                </li>
+                                {
+                                    state.profileImage ?
+                                        <li className="nav-item-avatar">
+                                            <div className="avatar-container">
+                                                {
+                                                    state.profileImage ? 
+                                                    <img className="avatar-image" src={state.profileImage} /> :
+                                                    <img className="avatar-image" src={`${process.env.PUBLIC_URL}/images/iconfinder_user_male2_172626.svg`} />
+                                                }
+                                             
+                                            <a className="nav-link" >{state.user}</a>
+                                            </div>
+                                        </li> :
+                                     <li className="nav-item-avatar">
+                                     <div className="avatar-container">
+                                             <img className="avatar-image" src={`${process.env.PUBLIC_URL}/images/iconfinder_user_male2_172626.svg`} />
+                                     <a className="nav-link" >{state.user}</a>
+                                     </div>
+                                 </li>
+                                }
                                 {
                                     state.isUserAdmin ?
                                         <li className="nav-item dropdown">

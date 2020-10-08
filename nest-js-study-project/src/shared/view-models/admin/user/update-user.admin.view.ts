@@ -20,5 +20,8 @@ export class UpdateUserAdminView {
     age: number;
     
     @ApiProperty()
+    profileImage:string
+    
+    @ApiProperty()
     roleId: string;
 }

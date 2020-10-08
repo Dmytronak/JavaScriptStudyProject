@@ -1,7 +1,7 @@
 import { ShoppingActionConstant } from "../../actions/constants/shopping-action.constant";
 
-export const ShopingCartReducer = (state = {}, action: any)=>{
-    switch(action.type) {        
+export const ShopingCartReducer = (state = {}, action: any) => {
+    switch (action.type) {
         case ShoppingActionConstant.SHOPPING_ACTION_CART_SET:
             return {
                 ...state,
@@ -13,6 +13,6 @@ export const ShopingCartReducer = (state = {}, action: any)=>{
                 shopingCart: {}
             }
         default:
-            return state; 
+            return state;
     }
 }

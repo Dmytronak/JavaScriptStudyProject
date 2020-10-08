@@ -35,7 +35,7 @@ const AdminUserComponent: React.FC = () => {
         id: SharedConstants.EMPTY_VALUE,
         email: SharedConstants.EMPTY_VALUE,
         firstName: SharedConstants.EMPTY_VALUE,
-        image: SharedConstants.EMPTY_VALUE,
+        profileImage: SharedConstants.EMPTY_VALUE,
         lastName: SharedConstants.EMPTY_VALUE,
         fullName: SharedConstants.EMPTY_VALUE,
         age: SharedConstants.ZERO_VALUE
@@ -113,6 +113,7 @@ const AdminUserComponent: React.FC = () => {
         filteredUsers.users[updatedUserIndex].lastName = user.lastName;
         filteredUsers.users[updatedUserIndex].fullName = user.fullName;
         filteredUsers.users[updatedUserIndex].age = user.age;
+        filteredUsers.users[updatedUserIndex].profileImage = user.profileImage;
     };
     const loginAsChoosenUser = (userId: string): void => {
         const login: ILoginAsUserAdminView = {
@@ -156,10 +157,10 @@ const AdminUserComponent: React.FC = () => {
                                             return <tr key={user.id}>
                                                 <td>{user.id}</td>
                                                 {
-                                                    user.image ?
+                                                    user.profileImage ?
                                                         <td className="table-item-avatar">
                                                             <div className="avatar-container">
-                                                                <img className="avatar-image" src={GetImageUrlHelper(user.image)} />
+                                                                <img className="avatar-image" src={GetImageUrlHelper(user.profileImage)} />
                                                             </div>
                                                         </td> :
                                                         <td className="table-item-avatar">
@@ -168,7 +169,6 @@ const AdminUserComponent: React.FC = () => {
                                                             </div>
                                                         </td>
                                                 }
-
                                                 <td>{user.email}</td>
                                                 <td>{user.fullName}</td>
                                                 <td>{user.age}</td>

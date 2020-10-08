@@ -85,7 +85,8 @@ export class AuthService {
         const token = localStorageService.getItem(AuthConstants.AUTH_TOKEN_KEY);
         if (token) {
             const decode: string = JSON.stringify(jwt_decode(token));
-            result = GetImageUrlHelper(JSON.parse(decode).profileImage);
+            console.log(JSON.parse(decode).profileImage)
+            result = JSON.parse(decode).profileImage ? GetImageUrlHelper(JSON.parse(decode).profileImage):AuthConstants.EMPTY_VALUE;
         }
         return result;
     }
